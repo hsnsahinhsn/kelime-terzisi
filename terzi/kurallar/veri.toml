@@ -1,0 +1,27 @@
+# Veriden çıkan kurallar. Derlem: insan ve yapay zekâ metinleri (XL-Sum haber, DergiPark özet, Vikipedi).
+# Adaylar log-odds ile sıralandı, eşik keşif bölümünde seçildi, sınama doğrulama bölümünde yapıldı.
+
+[[kural]]
+kimlik = "R008"
+ad = "Yapay zekâ sözlerinin yığılması"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "guclu"
+agirlik = 3
+tip = "olcu"
+islev = "yigilma"
+desen = [
+  '\bardından\b', '\bilişkin\b', '\bsürdür(?!ülebilir){EK}', '\baçısından\b', '\byürüt{EK}', '\bkapsamında\b',
+  '\byalnızca\b', '\byönelik\b', '\bönem taşı{EK}', '\bçok sayıda\b', '\btemaslarda bulun{EK}',
+  '\bçağrıda bulun{EK}', '\bgöstermektedir\b', '\bdeğerlendirilmektedir\b', '\bamaçlamaktadır\b',
+  '\bkatkı sağla{EK}', '\bkatkıda bulun{EK}', '\b(?:belirgin|önemli|kayda değer|ciddi) (?:biçimde|şekilde|ölçüde)\b',
+  '\bdoğrultusunda\b', '\bçerçevesinde\b', '\bbağlamında\b', '\bönümüzdeki (?:dönemde|günlerde|süreçte)\b',
+  '\bbüyük ölçüde\b', '\böne çık{EK}', '\bifade et{EK}', '\bvurgula{EK}', '\bdile getir{EK}', '\buzmanlar{EK}',
+  '\byetkililer{EK}',
+]
+esik = { yuzde = { genel = 2.0, akademik = 4.5, hukuk = 4.5 }, en_az_farkli = 3, en_az_kelime = 50 }
+aciklama = "Yapay zekânın insana göre çok daha sık kullandığı sözler bir metinde yığılmış."
+oneri = "Birkaçını sade karşılığıyla değiştir: ardından -> sonra, ilişkin -> ile ilgili, yalnızca -> sadece ya da yalnız, ifade etti/vurguladı -> dedi; gerekmeyenleri sil."
+kaynak = "Kelime Terzisi derlemi: 99 insan, 83 YZ metni, log-odds (olcum.kural_aday), 18.11.2026"
+yakalamali = ["Bakanlık, konuya ilişkin açıklamasında çalışmaların sürdürüleceğini vurguladı. Yetkililer, bölgedeki koşulların ardından yeni önlemler alınacağını ifade etti. Toplantının ardından yapılan açıklamada, iş birliği çerçevesinde ortak adımlar atılacağı belirtildi. Uzmanlar, bu adımların bölge açısından büyük önem taşıdığını dile getirdi. Yetkililer ayrıca önümüzdeki günlerde çok sayıda kurumla temaslarda bulunulacağını söyledi. Açıklamada, sürecin yalnızca ekonomik değil, siyasi açıdan da önemli olduğu kaydedildi."]
+yakalamamali = ["Bakan dün akşam gazetecilere konuştu. Bölgedeki çiftçilerin zararının karşılanacağını, ödemelerin ay sonunda başlayacağını söyledi. Sorulara da yanıt verdi: Kaç çiftçinin başvurduğu henüz belli değil, ama sayı binleri bulabilir. Toplantıdan sonra köylülerle görüşen bakan, ertesi sabah Ankara'ya döndü. Muhalefet ise açıklamayı yetersiz buldu. Bir milletvekili, ödemelerin geç kaldığını ve birçok ailenin borçlandığını hatırlattı."]

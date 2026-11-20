@@ -1,0 +1,221 @@
+# Asistan artıkları ve yazışma kalıpları.
+
+[[kural]]
+kimlik = "I001"
+ad = "Umarım yardımcı olur"
+grup = "iletisim"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\bumarım,?\s+(?:(?:bu|bu\s+yanıt|bu\s+düzenleme|bu\s+özet)\s+)?(?:(?:yardımcı|faydalı)\s+ol(?:ur|muştur)|işinize\s+yarar)\b']
+yer = "cumle_basi"
+haric_turler = ["anlati", "eposta"]
+aciklama = "Hazır fayda dileği metnin sonuna sohbet havası katıyor."
+oneri = "Dileği çıkar ve metni son bilgi veya gerekli eylemle bitir."
+kaynak = "insanca references/kaliplar/iletisim-dolgu-kurgu.md:10–15 (Tahir Yıldız, MIT); turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:70 (Yüce Zerey, MIT)"
+yakalamali = ["Umarım yardımcı olur!", "Umarım bu düzenleme işinize yarar."]
+yakalamamali = ["Umarım Ayşe de yarın bize yardımcı olur.", "Kılavuz kurulum sırasında yardımcı olur."]
+
+[[kural]]
+kimlik = "I002"
+ad = "Hazır soru övgüsü"
+grup = "iletisim"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\b(?:(?:bu\s+)?(?:harika|çok\s+güzel|mükemmel)\s+bir\s+soru(?:ydu)?|ne\s+güzel\s+bir\s+soru)\s*[!.…]?\s*$']
+yer = "cumle_basi"
+haric_turler = ["anlati"]
+aciklama = "Hazır soru övgüsü yanıtın kendi içeriğiyle ilgisi olmayan bir giriş yapıyor."
+oneri = "Övgüyü çıkarıp sorunun ilk yanıtını ver."
+kaynak = "insanca references/kaliplar/iletisim-dolgu-kurgu.md:21–29 (Tahir Yıldız, MIT)"
+yakalamali = ["Harika bir soru!", "Bu çok güzel bir soru."]
+yakalamamali = ["Harika bir soru soran öğrenciyi dinledik.", "Sorunun yanıtı sürüme bağlı."]
+
+[[kural]]
+kimlik = "I003"
+ad = "Hazır çıktı sunuşu"
+grup = "iletisim"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['^(?:(?:elbette|tabii(?:\s+ki)?)[!.,]\s+)?işte\s+(?:(?:istediğiniz|düzenlenmiş|güncellenmiş|hazırladığım)\s+(?:metin|yanıt|özet|liste|taslak|bilgi){EK}|metin|özet|taslak)\s*(?=[:.!]|$)', '\bişte\s+(?:metninizin|yazınızın|taslağınızın)\s+(?:daha\s+)?(?:doğal|düzenlenmiş|güncellenmiş|sadeleştirilmiş)\b[^.!?:]{0,75}\s*hal[iı]\b']
+yer = "giris"
+haric_turler = ["anlati"]
+aciklama = "Hazır çıktı sunuşu teslim edilen metnin üstüne bir sohbet girişi ekliyor."
+oneri = "Sunuşu çıkar ve istenen metni ilk satırdan ver."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:68 (Yüce Zerey, MIT)"
+yakalamali = ["Elbette! İşte istediğiniz taslak:", "Tabii ki! İşte metninizin daha doğal hâli:", "Elbette! İşte istediğiniz bilgiler:"]
+yakalamamali = ["Elbette! Toplantı yarın.", "İşte o gün dosyayı açtık."]
+
+[[kural]]
+kimlik = "I004"
+ad = "Yeni soru daveti"
+grup = "iletisim"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bbaşka\s+sorunuz\s+olursa,?\s+(?:sormaktan\s+)?çekinmeyin\b', '\byardımcı\s+olabileceğim\s+başka\s+bir\s+(?:konu|şey)\s+var\s+mı\s*\?']
+yer = "kapanis"
+haric_turler = ["eposta", "anlati"]
+aciklama = "Yeni soru daveti tamamlanmış metne sohbeti sürdürme çağrısı ekliyor."
+oneri = "Daveti çıkar ve son bilgiden sonra metni bitir."
+kaynak = "insanca scripts/olcum.py:115–119 (Tahir Yıldız, MIT)"
+yakalamali = ["Başka sorunuz olursa sormaktan çekinmeyin.", "Yardımcı olabileceğim başka bir konu var mı?"]
+yakalamamali = ["Başka sorunuz olursa formu kullanın.", "Kayıt için öğrenci işlerine yazın."]
+
+[[kural]]
+kimlik = "I005"
+ad = "Yanıtı sürdürme teklifi"
+grup = "iletisim"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['^(?:dilerseniz|isterseniz),?\s+(?:{S}\s+){0,8}(?:açıklayabilirim|ayrıntılandırabilirim|detaylandırabilirim|devam\s+edebilirim)\b', '^devam\s+etmemi\s+ister\s+misiniz\s*\?']
+yer = "kapanis"
+haric_turler = ["anlati", "eposta"]
+aciklama = "Sürdürme teklifi, teslim edilecek metne sohbetten bir kapanış ekliyor."
+oneri = "Gerekli açıklamayı metne dahil et ve genel teklifi çıkar."
+kaynak = "insanca references/kaliplar/iletisim-dolgu-kurgu.md:10–15 (Tahir Yıldız, MIT)"
+yakalamali = ["Dilerseniz ilk bölümü de ayrıntılandırabilirim.", "Devam etmemi ister misiniz?"]
+yakalamamali = ["Dilerseniz arşivden bir kopya isteyin.", "İlk bölümü üç örnekle açıkladım."]
+
+[[kural]]
+kimlik = "I006"
+ad = "Dil modeli olarak öz tanıtım"
+grup = "iletisim"
+sinif = "yz"
+duzey = "guclu"
+agirlik = 3
+desen = ['\bbir\s+(?:yapay\s+zeka\s+)?dil\s+modeli\s+olarak,?\s+(?:ben|duygularım\s+yok|kişisel\s+görüşüm\s+yok|(?:{S}\s+){0,7}{S}(?:amam|emem|abilirim|ebilirim))\b']
+yer = "cumle_basi"
+haric_turler = ["anlati", "akademik"]
+aciklama = "Birinci kişiyle kurulan dil modeli öz tanıtımı asistan yanıtının parçası."
+oneri = "Öz tanıtımı çıkar ve varsa görevi etkileyen somut sınırı belirt."
+kaynak = "insanca references/kaliplar/iletisim-dolgu-kurgu.md:8–12 (Tahir Yıldız, MIT)"
+yakalamali = ["Bir yapay zekâ dil modeli olarak dosyayı açamam.", "Bir dil modeli olarak ben yalnızca metni okuyabilirim."]
+yakalamamali = ["Bir dil modeli olarak eğitilen sistem sınamada başarısız oldu.", "Metin, bir dil modeli olarak tasarlanan aracı inceliyor."]
+
+[[kural]]
+kimlik = "I007"
+ad = "Arayüzden kalan yanıt düğmesi"
+grup = "iletisim"
+sinif = "yz"
+duzey = "guclu"
+agirlik = 3
+desen = ['^\bregenerate\s+response\b\s*[.!]?$']
+haric_turler = ["teknik", "akademik"]
+aciklama = "Yeniden yanıt üretme düğmesinin İngilizce etiketi metinde tek başına kalmış."
+oneri = "Düğme etiketini metinden çıkar."
+kaynak = "insanca references/kaliplar/iletisim-dolgu-kurgu.md:8–12 (Tahir Yıldız, MIT)"
+yakalamali = ["Yanıt yeniden yüklendi. Regenerate response. Önceki yanıt ekranda kaldı.", "Sayfa henüz kapanmadı.\n\nRegenerate response\n\nDüğmenin etiketi metne karıştı."]
+yakalamamali = ["Regenerate response düğmesine basın.", "Etikette ‘Regenerate response’ yazıyor."]
+
+[[kural]]
+kimlik = "I008"
+ad = "Hadi başlayalım anonsu"
+grup = "iletisim"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bhadi,?\s+(?:hemen\s+)?başlayalım\s*[!.…]?\s*$', '\blafı\s+uzatmadan\s+(?:hemen\s+)?başlayalım\b']
+yer = "cumle_basi"
+haric_turler = ["anlati", "sosyal"]
+aciklama = "Başlama anonsu ilk adımın önüne çoğu kez bir boş cümle ekliyor."
+oneri = "Anonsu çıkar ve ilk adımı söyle."
+kaynak = "insanca references/kaliplar/dil.md:104 (Tahir Yıldız, MIT); turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:62 (Yüce Zerey, MIT)"
+yakalamali = ["Hadi başlayalım!", "Lafı uzatmadan başlayalım."]
+yakalamamali = ["Hadi, yarın erken başlayalım.", "Başlamak için önce giriş düğmesine basın."]
+
+[[kural]]
+kimlik = "I009"
+ad = "Gelin birlikte bakalım anonsu"
+grup = "iletisim"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bgelin,?\s+(?:(?:bu\s+(?:konuya|konuyu)|şimdi)\s+)?birlikte\s+(?:inceleyelim|bakalım|keşfedelim)\b']
+yer = "cumle_basi"
+haric_turler = ["anlati", "sosyal"]
+aciklama = "Birlikte bakma anonsu metnin bir sonraki adımını gereksiz yere önceden duyuruyor."
+oneri = "Anonsu çıkarıp incelenen öğeyi ve onunla ilgili ilk bulguyu yaz."
+kaynak = "insanca references/kaliplar/uslup.md:87–91 (Tahir Yıldız, MIT)"
+yakalamali = ["Gelin bu konuya birlikte bakalım.", "Gelin birlikte inceleyelim."]
+yakalamamali = ["Gelin, saat beşte buluşalım.", "Verilere birlikte baktık ve farkı bulduk."]
+
+[[kural]]
+kimlik = "I010"
+ad = "Kalıplaşmış duygusal teselli"
+grup = "iletisim"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:yalnız\s+değilsiniz|bunu\s+hisseden\s+tek\s+kişi\s+siz\s+değilsiniz|bunu\s+hissetmeniz\s+çok\s+normal|kendinize\s+karşı\s+nazik\s+olun)\b']
+en_az = 2
+turler = ["ajan", "genel", "teknik", "rapor", "kurumsal"]
+aciklama = "Kalıp teselli cümlelerinin tekrarı iş anlatımını kişisel destek söylemine kaydırıyor."
+oneri = "Konu uygulamalı bir sorunsa teselli yerine okurun uygulayacağı adımı ver."
+kaynak = "insanca references/kaliplar/iletisim-dolgu-kurgu.md:32–42 (Tahir Yıldız, MIT)"
+yakalamali = ["Dosyalarınızı bulamıyorsanız yalnız değilsiniz. Bunu hissetmeniz çok normal.", "Arayüzü ilk açtığınızda yalnız değilsiniz. Kendinize karşı nazik olun."]
+yakalamamali = ["Bu acıyı yaşarken yalnız değilsiniz.", "Yeni arayüzde Ayarlar bölümü sağ üstte. Yedeklere oradan bakabilirsiniz."]
+
+[[kural]]
+kimlik = "I011"
+ad = "E-postanın iyi bulması"
+grup = "iletisim"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\bumarım(?:\s+ki)?\s+bu\s+(?:e-posta|e\s+posta|mesaj|ileti)\s+sizi\s+iyi\s+bul(?:ur|muştur|uyordur)\b']
+yer = "cumle_basi"
+aciklama = "E-postanın muhatabı iyi bulmasını dileyen söz İngilizce bir selamlamanın birebir çevirisi."
+oneri = "Merhaba gibi yerleşik bir selamdan sonra e-postanın amacını söyle."
+kaynak = "insanca references/turler.md:62–74 (Tahir Yıldız, MIT)"
+yakalamali = ["Umarım bu e-posta sizi iyi bulur.", "Umarım bu mesaj sizi iyi bulmuştur."]
+yakalamamali = ["Umarım iyisinizdir.", "Umarım bu mesaj size zamanında ulaşır."]
+
+[[kural]]
+kimlik = "I012"
+ad = "Mutlu perşembeler selamı"
+grup = "iletisim"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:herkese\s+)?mutlu\s+(?:pazartesiler|salılar|çarşambalar|perşembeler)(?:\s+dilerim)?[!.…]?\s*$']
+yer = "cumle_basi"
+haric_turler = ["anlati", "sosyal"]
+aciklama = "Hafta içi gününe mutluluk dileyen selam İngilizce yazışma kalıbını yansıtıyor."
+oneri = "Bağlama göre merhaba veya iyi günler de."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:61 (Yüce Zerey, MIT)"
+yakalamali = ["Mutlu perşembeler!", "Herkese mutlu pazartesiler!"]
+yakalamamali = ["İyi perşembeler!", "Herkese mutlu bayramlar!"]
+
+[[kural]]
+kimlik = "I013"
+ad = "İletişime geçme gerekçesi"
+grup = "iletisim"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:konuyla|{S}\s+ile)\s+ilgili\s+olarak\s+(?:sizinle\s+)?iletişime\s+geçmek\s+iste(?:dim|dik)\b']
+aciklama = "İletişime geçmek istedim kalıbı yazışmanın somut amacını geciktiriyor."
+oneri = "İstenen yanıtı veya gönderilen bilgiyi ilk cümlede açıkça belirt."
+kaynak = "insanca references/turler.md:68–74 (Tahir Yıldız, MIT)"
+yakalamali = ["Konuyla ilgili olarak sizinle iletişime geçmek istedim.", "Başvuru ile ilgili olarak iletişime geçmek istedik."]
+yakalamamali = ["Başvuru formunun son sayfasını gönderir misiniz?", "Toplantıyla ilgili olarak iki önerisi vardı."]
+
+[[kural]]
+kimlik = "I014"
+ad = "Doğru duydunuz vurgusu"
+grup = "iletisim"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:ve\s+)?evet,\s+doğru\s+duydunuz\s*[:.!…]']
+yer = "cumle_basi"
+haric_turler = ["anlati", "sosyal"]
+aciklama = "Doğru duydunuz sözü yazılı bilgiyi sahne anonsuyla vurguluyor."
+oneri = "Anonsu atla ve varsa şaşırtıcı bilgiyi sayı veya koşuluyla ver."
+kaynak = "insanca references/kaliplar/dil.md:102–111 (Tahir Yıldız, MIT)"
+yakalamali = ["Ve evet, doğru duydunuz: Üç gün ücretsiz.", "Evet, doğru duydunuz!"]
+yakalamamali = ["Doğru duydunuz mu?", "Evet, üç gün ücretsiz."]

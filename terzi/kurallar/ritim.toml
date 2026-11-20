@@ -1,0 +1,117 @@
+# Belge düzeyi ölçüler. Eşikler ilk sürümdür; Adım 3'te veriyle ayarlanır.
+# Kaynak kısaltmaları: I = insanca (Tahir Yıldız, MIT), T = turkish-anti-ai-skill (Yüce Zerey, MIT),
+# H = turkce-humanizer (Büşra Begçecanlı, MIT).
+
+[[kural]]
+kimlik = "R001"
+ad = "Resmî cümle sonu dizisi"
+grup = "ritim"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+haric_turler = ["akademik", "hukuk"]
+tip = "olcu"
+islev = "son_ek_tekduze"
+esik = { dizi = 3, pay = 0.6, en_az_cumle = 6, siniflar = ["mAktAdIr", "mIştIr", "DIr"] }
+aciklama = "Art arda üç ya da daha çok cümle aynı resmî ekle bitiyor."
+oneri = "Eklerin bir kısmını sade geçmiş, geniş zaman ya da -yor ile değiştir; hepsini değil, anlama uyanları."
+kaynak = "I dil.md 13 (uyak sonlar), T sentaks-ve-morfoloji.md (-mAktAdIr ve -DIr dizisi)"
+yakalamali = ["Bu yöntem verimliliği artırmaktadır. Ayrıca maliyetleri düşürmektedir. Kullanıcılar da memnun kalmaktadır."]
+yakalamamali = ["Bu yöntem verimliliği artırıyor. Maliyetleri de düşürdü. Kullanıcılar memnun kalmaktadır."]
+
+[[kural]]
+kimlik = "R002"
+ad = "-mAktA yoğunluğu"
+grup = "ritim"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+tip = "olcu"
+islev = "ek_yogunluk"
+esik = { sinif = "mAktAdIr", yuzde = { genel = 1.0, akademik = 2.5, hukuk = 2.5, rapor = 1.5, blog = 0.5, anlati = 0.5, sosyal = 0.5, eposta = 0.5, ajan = 0.5 }, en_az_kelime = 30 }
+aciklama = "-mAktA ve -mAktAdIr eki metnin türüne göre çok sık."
+oneri = "Türün doğal zamanını kullan: haberde -DI, tanımda geniş zaman, sohbet ve blogda -yor."
+kaynak = "T sentaks-ve-morfoloji.md 93-99, detect_tr_ai.py yoğunluk aralıkları"
+yakalamali = ["Şirket yeni ürünler geliştirmektedir ve pazarda büyümektedir. Çalışanlar eğitim almakta, müşteriler destek görmektedir. Yönetim de yatırım yapmaktadır. Ekip sürekli çalışmaktadır. Bölge ekonomisi gelişmektedir. Bu süreç her yıl sürmektedir. İhracat artmaktadır. Yeni pazarlar açılmaktadır. Hedefler büyümektedir. Kâr da yükselmektedir."]
+yakalamamali = ["Şirket geçen yıl yeni ürünler geliştirdi ve pazarda büyüdü. Çalışanlar eğitim aldı, müşteriler destek gördü. Yönetim de yatırım yaptı. Ekip yıl boyu çalıştı. Bölge ekonomisi gelişiyor. Bu süreç her yıl sürüyor. İhracat arttı. Yeni pazarlar açıldı. Hedefler büyüdü. Kâr da yükseldi."]
+
+[[kural]]
+kimlik = "R003"
+ad = "Düzenli cümle uzunluğu"
+grup = "ritim"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+tip = "olcu"
+islev = "ritim"
+haric_turler = ["akademik"]
+esik = { cov = 0.35, en_az_cumle = 8, benzer_dizi = 5 }
+aciklama = "Cümleler hep aynı uzunlukta; metin metronom gibi akıyor."
+oneri = "Bir uzun cümlenin ardından kısa bir cümle koy; iki kısa cümleyi birleştir. Anlamı değiştirme."
+kaynak = "I dil.md 14 (metronom ritim), olcum.py CoV eşikleri"
+yakalamali = ["Ekip yeni sürümü dün akşam sorunsuz biçimde yayına aldı. Kullanıcılar ilk saatlerde hızlı geri bildirim göndermeye başladı. Destek ekibi gelen bütün mesajları sırayla tek tek yanıtladı. Yönetim kurulu sonuçları ertesi sabah ayrıntılı biçimde inceledi. Satış ekibi yeni müşterilerle yapılan toplantıları planladı. Pazarlama bölümü kampanyanın ilk sonuçlarını raporla paylaştı. Yazılım ekibi küçük hataları gün içinde hızla düzeltti. Şirket bu başarıyı çalışanlarıyla birlikte akşam kutladı."]
+yakalamamali = ["Ekip yeni sürümü dün akşam yayına aldı. Sorun çıkmadı. Kullanıcılar ilk saatlerde geri bildirim göndermeye başladı, destek ekibi de gelen mesajları sırayla yanıtladı; gece yarısına kadar bekleyen tek bir mesaj bile kalmadı. Ertesi sabah yönetim sonuçlara baktı. Sevindiler. Satış ekibi toplantıları planladı. Pazarlama bölümü ise kampanyanın ilk sonuçlarını, küçük bir tabloyla, herkese gönderdi. Akşam kutlama yapıldı."]
+
+[[kural]]
+kimlik = "R004"
+ad = "Bağlaçla açılan cümleler"
+grup = "ritim"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+tip = "olcu"
+islev = "acilis_tekrar"
+esik = { pay = 0.25, en_az_cumle = 6, liste = ["ayrıca", "bunun yanı sıra", "bununla birlikte", "öte yandan", "bunun yanında", "dahası", "üstelik", "sonuç olarak", "bu nedenle", "bu bağlamda", "bu doğrultuda", "bu çerçevede", "ek olarak", "son olarak", "özetle", "kısacası", "nitekim", "dolayısıyla", "aynı zamanda"] }
+aciklama = "Cümlelerin dörtte birinden çoğu geçiş bağlacıyla açılıyor."
+oneri = "Bağlaçların çoğunu sil; ilişki zaten anlaşılıyorsa cümleyi doğrudan konuyla başlat."
+kaynak = "I dil.md 19, olcum.py açılış listesi; T ai-turkcesi-sozlugu.md katman 2"
+yakalamali = ["Proje geçen yıl başladı. Ayrıca bütçe artırıldı. Bunun yanı sıra yeni personel alındı. Öte yandan bazı sorunlar çıktı. Bununla birlikte ekip hedefe ulaştı. Sonuç olarak proje başarılı oldu."]
+yakalamamali = ["Proje geçen yıl başladı. Bütçe artırıldı, yeni personel alındı. Bazı sorunlar çıktı ama ekip hedefe ulaştı. Ayrıca bir ödül de kazandı. Yönetim memnun. Gelecek yıl ikinci aşama başlayacak."]
+
+[[kural]]
+kimlik = "R005"
+ad = "Aynı kelimeyle açılış"
+grup = "ritim"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+tip = "olcu"
+islev = "acilis_tekrar"
+esik = { pay = 0.25, en_az_cumle = 8 }
+aciklama = "Cümlelerin dörtte birinden çoğu aynı kelimeyle açılıyor."
+oneri = "Özneyi bir kez söyledikten sonra düşür ya da cümlenin başına başka bir öğe al."
+kaynak = "I dedektor.md 42 (açılış tekrarı), olcum.py ilk kelime payı"
+yakalamali = ["Uygulama hızlıdır. Uygulama güvenlidir. Uygulama ücretsizdir. Kullanıcılar memnun. Uygulama her yerde çalışır. Destek ekibi hazır. Fiyatı uygun. Kurulumu kolay."]
+yakalamamali = ["Uygulama hızlı ve güvenli. Ücretsiz de. Kullanıcılar memnun. Her yerde çalışıyor. Destek ekibi hazır. Fiyatı uygun. Kurulumu kolay. Bir de Türkçe arayüzü var."]
+
+[[kural]]
+kimlik = "R006"
+ad = "-ArAk yorum kuyruğu"
+grup = "ritim"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+tip = "olcu"
+islev = "ulac_kuyruk"
+esik = { pay = 0.3, en_az_cumle = 5 }
+aciklama = "Cümlelerin çoğu ikinci yarısında -ArAk ile eklenmiş bir yorum taşıyor."
+oneri = "Kuyruktaki yorumu ya sil ya da ayrı, somut bir cümle yap."
+kaynak = "I icerik.md 3 (süs ulaç kuyruğu), olcum.py ikinci yarı -arak payı"
+yakalamali = ["Festival bu yıl da kenti renklendirerek büyük ilgi gördü. Sanatçılar sahneye çıkarak izleyicileri coşturdu. Belediye ücretsiz ulaşım sağlayarak katılımı artırdı. Esnaf da indirim yaparak ziyaretçileri sevindirdi. Gece havai fişeklerle sona ererek unutulmaz bir an yaşattı."]
+yakalamamali = ["Festival bu yıl da büyük ilgi gördü. Sanatçılar sahneye çıktı, izleyiciler coştu. Belediye ücretsiz ulaşım sağladı. Esnaf da indirim yaptı. Gece havai fişeklerle sona erdi."]
+
+[[kural]]
+kimlik = "R007"
+ad = "Üçleme alışkanlığı"
+grup = "ritim"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+tip = "olcu"
+islev = "uclu"
+esik = { bin_kelimede = 4, en_az = 3 }
+aciklama = "Nitelikler ve yararlar sık sık üçlü listeyle veriliyor."
+oneri = "Listeyi malzemenin gerçek sayısına göre kur: bazen iki öğe, bazen dört."
+kaynak = "I dil.md 10 (üçlemeler), olcum.py X, Y ve Z deseni"
+yakalamali = ["Ürün hızlı, güvenli ve kolay. Ekip genç, dinamik ve yaratıcı. Hizmet hızlı, ucuz ve güvenilir. Hedefimiz büyümek, gelişmek ve kazanmak."]
+yakalamamali = ["Ürün hızlı ve güvenli. Ekip genç. Hizmet ucuz ama biraz yavaş. Hedefimiz büyümek."]

@@ -1,0 +1,9 @@
+{
+  "name": "kelime-terzisi",
+  "version": "1.2.0",
+  "description": "Türkçe metinde yapay zekâ izlerini bulan denetçi, yazarken koruma kancası ve hafif düzeltici.",
+  "author": {
+    "name": "hsnsahinhsn"
+  },
+  "license": "MIT"
+}

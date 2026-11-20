@@ -1,0 +1,356 @@
+# TDK yazım kuralları.
+
+[[kural]]
+kimlik = "Y001"
+ad = "Her şey ayrı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\bherşey{EK}\b']
+aciklama = "Her ile şey bitişik yazılmış."
+oneri = "Her şey biçiminde ayır ve eki şey sözcüğünde bırak."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:72 (Yüce Zerey, MIT)"
+yakalamali = ["Herşey hazır.", "Çantada herşeyi bulduk."]
+yakalamamali = ["Her şey hazır.", "Elindeki her şeyi masaya koydu."]
+
+[[kural]]
+kimlik = "Y002"
+ad = "Bir şey ayrı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\b(?:birşey|hiçbirşey){EK}\b']
+aciklama = "Bir veya hiçbir sözü şey ile bitişik yazılmış."
+oneri = "Bir şey veya hiçbir şey yaz ve varsa eki şey sözcüğünde bırak."
+kaynak = "insanca references/yazim-ve-terim.md:33 (Tahir Yıldız, MIT)"
+yakalamali = ["Burada birşey unuttum.", "Kutuda hiçbirşey yoktu."]
+yakalamamali = ["Bana bir şey söyledi.", "Hiçbir şeye dokunmadık."]
+
+[[kural]]
+kimlik = "Y003"
+ad = "Hiçbir bitişik"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = [
+    '\bhiç\s+biri(?:miz{EK}|niz{EK}|n(?:i|e|in|de|den|deki{EK})|yle|si(?:n(?:i|e|in|de|den)|yle)?)?\b',
+    '\bhiç\s+bir\b(?!\s+(?:araya|(?:arada|başına)(?:yken)?|kez|defa|an\s+olsun|türlü)\b)(?=(?:\s+{S}){1,2}\s+(?:değil{EK}|yok(?:tu{EK}|tur{EK}|muş{EK}|sa{EK})?|{S}(?:madı|medi|mamış|memiş|maz|mez|m[ıiuü]yor){EK})\b(?:\s*(?:[.!?,;:]|$)|\s+m[ıiuü]\b))',
+]
+aciklama = "Yokluk bildiren hiçbir ayrı yazılmış."
+oneri = "Yokluk anlamında hiçbir sözcüğünü bitişik yaz."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:71 (Yüce Zerey, MIT)"
+yakalamali = ["Hiç bir kapı açık değildi.", "Çekmecelerin hiç birinde anahtar yoktu.", "Hiç bir kitabı bitirmedin mi?"]
+yakalamamali = [
+    "Hiçbir kapı açık değildi.",
+    "Hiç bir kez olsun bu yolu denedin mi?",
+    "Daha önce hiç bir müzeyi gece gezdin mi?",
+    "Hiç birikim yapamadım.",
+    "Hiç bir balinayı yakından gördün mü?",
+    "Hiç bir balinayı küçükken açık denizde kendi gözlerinle gördün mü?",
+    "İki kardeş hiç bir arada yaşamadı.",
+    "Çocuk hiç bir başına kalmadı.",
+    "Kardeşler hiç bir aradayken tartışmadı.",
+]
+
+[[kural]]
+kimlik = "Y004"
+ad = "Birçok bitişik"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = [
+    '\bbir\s+çok\b(?=\s+(?:çalışma|dosya|insan|kitap|kişi|konu|konut|öğrenci|örnek|soru|sorun|şey|ülke|ürün|yer)(?:y?[ıiuüae]|d[ae]n?|n?[ıiuü]n)?\b)',
+    '\bbir\s+çoğu(?:muz{EK}|nuz{EK}|na|nu|nun|nda|ndan|yla)?\b',
+]
+aciklama = "Belirsiz çokluk bildiren birçok ayrı yazılmış."
+oneri = "Birçok ve birçoğu biçimlerini bitişik yaz."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:69 (Yüce Zerey, MIT)"
+yakalamali = ["Bir çok kişi geldi.", "Soruların bir çoğunu yanıtladık."]
+yakalamamali = ["Birçok soruyu yanıtladık.", "Deftere bir çokgen çizin.", "Köye bir çok amaçlı salon yapıldı.", "Konserde bir çok sesli eser çalındı.", "Öğrencilere bir çok değişkenli denklem verdim."]
+
+[[kural]]
+kimlik = "Y005"
+ad = "Birkaç bitişik"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\bbir\s+kaç(?:ı(?:mız{EK}|nız{EK}|na|nı|nın|nda|ndan|yla)?)?\b']
+aciklama = "Belirsiz azlık bildiren birkaç ayrı yazılmış."
+oneri = "Birkaç ve birkaçı biçimlerini bitişik yaz."
+kaynak = "insanca references/yazim-ve-terim.md:30 (Tahir Yıldız, MIT)"
+yakalamali = ["Bir kaç kitap aldım.", "Soruların bir kaçını sonra çözdü."]
+yakalamamali = ["Birkaç kitap aldım.", "Kaç kitap kaldı?"]
+
+[[kural]]
+kimlik = "Y006"
+ad = "Herhangi bitişik"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\bher\s+hangi(?:si(?:n(?:i|e|in|de|den)|yle)?|ler(?:i(?:n(?:i|e|in|de|den)|yle)?)?|miz{EK}|niz{EK})?\b', '\bherhangibir{EK}\b']
+aciklama = "Herhangi ayrı yazılmış veya sonundaki bir sözcüğüne bitişmiş."
+oneri = "Herhangi sözcüğünü birleştir ve ardından gelen bir sözcüğünü ayır."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:71 (Yüce Zerey, MIT)"
+yakalamali = ["Her hangi bir kutuyu açın.", "Herhangibirine dosyayı iletin.", "Bunların her hangisini seçebilirsin.", "Örneklerin her hangisi kullanılabilir."]
+yakalamamali = ["Herhangi bir kutuyu açın.", "Herhangi biriniz dosyayı gördü mü?", "Bunların herhangisini seçebilirsin.", "Örneklerin herhangi biri kullanılabilir."]
+
+[[kural]]
+kimlik = "Y007"
+ad = "Ya da ayrı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\byada\b(?!\s+taş(?:ı|ları)(?:n(?:ı|a|ın|da|dan)|yla)?\b)']
+aciklama = "Seçenek bağlacı ya da bitişik yazılmış."
+oneri = "Ya da bağlacını iki ayrı sözcük olarak yaz."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:81 (Yüce Zerey, MIT)"
+yakalamali = ["Çay yada kahve alalım.", "Bugün yada yarın gelebilirim."]
+yakalamamali = ["Çay ya da kahve alalım.", "Burası yaya trafiğine açık.", "Efsaneye göre yada taşı yağmur yağdırır.", "Yada taşının öyküsü kuşaktan kuşağa anlatıldı."]
+
+[[kural]]
+kimlik = "Y008"
+ad = "Fark etmek ayrı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\bfarke[td]{EK}\b']
+aciklama = "Fark sözcüğü etmek fiiline bitişik yazılmış."
+oneri = "Fark etmek fiilini çekimli biçimlerinde de ayrı yaz."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:78 (Yüce Zerey, MIT)"
+yakalamali = ["Kapının açık olduğunu farkettik.", "Yazım hatası hemen farkedilir."]
+yakalamamali = ["Kapının açık olduğunu fark ettik.", "Hata kolay fark edilir."]
+
+[[kural]]
+kimlik = "Y009"
+ad = "Yurt dışı ve yurt içi ayrı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\byurtdışı{EK}\b(?!\s+türkler\s+ve\s+akraba\s+topluluklar\b)', '\byurtiçi{EK}\b(?!\s+kargo{EK}\b)']
+aciklama = "Yurt dışı veya yurt içi bitişik yazılmış."
+oneri = "Yurt dışı ve yurt içi sözlerini ayrı yaz ve eki ikinci sözcükte bırak."
+# Yurt dışı örneği: insanca references/kaliplar/dil.md:61–64 (Tahir Yıldız, MIT).
+kaynak = "TDK Yazım Kılavuzu, 'yurt dışı' maddesi (görevde istendi); TDK Yazım Kılavuzu, 'yurt içi' maddesi (görevde istendi)"
+yakalamali = ["İki ay yurtdışında kalacağız.", "Yurtiçi uçuşlar sabah başlıyor."]
+yakalamamali = ["İki ay yurt dışında kalacağız.", "Yurt içi uçuşlar sabah başlıyor.", "Yurtiçi Kargo bugün paketi getirdi.", "Yurtdışı Türkler ve Akraba Topluluklar Başkanlığı başvuruları açtı."]
+
+[[kural]]
+kimlik = "Y010"
+ad = "Ön yargı ayrı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\bönyargı{EK}\b']
+aciklama = "Ön yargı bitişik yazılmış."
+oneri = "Ön yargı sözünü ayrı yaz ve varsa eki yargı sözcüğünde bırak."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:75 (Yüce Zerey, MIT)"
+yakalamali = ["Bu bir önyargı.", "Önyargıları kararını etkiledi."]
+yakalamamali = ["Bu bir ön yargı.", "Bütçe için yeni bir öngörü hazırladık."]
+
+[[kural]]
+kimlik = "Y011"
+ad = "Art arda yazımı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\b(?:artarda|ardarda|ard\s+arda)\b']
+aciklama = "Art arda ikilemesi bitişik veya ilk sözcüğü d ile yazılmış."
+oneri = "İkilemeyi art arda biçiminde iki sözcük olarak yaz."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:73 (Yüce Zerey, MIT)"
+yakalamali = ["Telefon artarda çaldı.", "Ard arda üç kez denedi."]
+yakalamamali = ["Telefon art arda çaldı.", "Ardı ardına üç kez denedi."]
+
+[[kural]]
+kimlik = "Y012"
+ad = "Maalesef yazımı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\b(?:malesef|maalasef)\b']
+aciklama = "Maalesef sözcüğünün ünlüleri yanlış yazılmış."
+oneri = "Sözcüğü maalesef biçiminde yaz."
+kaynak = "TDK Yazım Kılavuzu, 'maalesef' maddesi (görevde istendi)"
+yakalamali = ["Malesef otobüsü kaçırdık.", "Son dosya maalasef açılamadı."]
+yakalamamali = ["Maalesef otobüsü kaçırdık.", "Malzeme bugün gelecek."]
+
+[[kural]]
+kimlik = "Y013"
+ad = "Yalnız yazımı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\byanlız{EK}\b']
+aciklama = "Yalnız sözcüğünde l ve n harflerinin yeri karışmış."
+oneri = "Yalnız yazımını kullan ve eki koru."
+# Yalnız örneği: insanca references/kaliplar/iletisim-dolgu-kurgu.md:34 (Tahir Yıldız, MIT).
+kaynak = "TDK Yazım Kılavuzu, 'yalnız' maddesi (görevde istendi)"
+yakalamali = ["Bu akşam yanlız kalacağım.", "Yanlızlık ona iyi geldi."]
+yakalamamali = ["Bu akşam yalnız kalacağım.", "Yanlış yola girdik."]
+
+[[kural]]
+kimlik = "Y014"
+ad = "Orijinal yazımı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\borjinal{EK}\b']
+aciklama = "Orijinal sözcüğünün ilk i harfi düşmüş."
+oneri = "Orijinal sözcüğünü ve ekli biçimlerini r harfinden sonra i ile yaz."
+# Orijinal örneği: insanca SKILL.md:38 (Tahir Yıldız, MIT).
+kaynak = "TDK Yazım Kılavuzu, 'orijinal' maddesi (görevde istendi)"
+yakalamali = ["Orjinal belge burada.", "Tablonun orjinalini gördüm."]
+yakalamamali = ["Orijinal belge burada.", "Resmin özgün kopyası arşivde."]
+
+[[kural]]
+kimlik = "Y015"
+ad = "Ondalık virgülü"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = [
+    '(?<![\w.,])(?<!\bsürüm[:\s])(?<!\bsürüm[:\s]\s)(?<!\bsürümü\s)(?<!\bversiyon[:\s])(?<!\bversiyon[:\s]\s)(?<!\bversiyonu\s)(?:0\.\d+|\d+\.(?:\d{1,2}|\d{4,}))\s+(?:milyon(?:a|u|un|da|dan|la|luk{EK})?|milyar(?:a|ı|ın|da|dan|la|lık{EK})?|bin(?:e|i|in|den|lik{EK})?)\b',
+    '(?<![\w.,])%\s*(?:0\.\d+|\d+\.(?:\d{1,2}|\d{4,}))(?!\w|[.,]\d)',
+    '(?<![\w.,%])(?:0\.\d+|\d+\.(?:\d{1,2}|\d{4,}))\s*%',
+]
+aciklama = "Büyüklük veya yüzde bildiren sayı ondalık noktasıyla yazılmış."
+oneri = "Ondalık ayracı virgül yap ve yüzde işaretini boşluksuz olarak sayının önüne koy."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:27–28 (Yüce Zerey, MIT); insanca references/yazim-ve-terim.md:11–13 (Tahir Yıldız, MIT)"
+yakalamali = ["Proje 3.5 milyon liraya mal oldu.", "Hata oranı %2.75 olarak ölçüldü.", "Faiz oranı 4.25% oldu.", "Satış 1.4 milyar liraya ulaştı ve 8.5 bin ürün alındı.", "Ölçümde %0.125 fark vardı.", "Maliyet 0.125 milyon liraydı.", "Dosyayı 2.4 bin kişi indirdi."]
+yakalamamali = [
+    "Proje 3,5 milyon liraya mal oldu.",
+    "1.250 bin liralık destek ayrıldı.",
+    "Toplantı 14.30'da başladı ve ekip 2.4.1 sürümünü tanıttı.",
+    "Ölçümde %2,75 fark vardı.",
+    "Sürüm 2.4 binada kullanıldı.",
+    "Sürüm 3.5 milyonlarca cihazda çalışıyor.",
+    "Sürüm 2.4 bin kişi tarafından indirildi.",
+    "Sürüm:2.4 bin cihazda çalışıyor.",
+    "Versiyon  2.4 bin kişi tarafından indirildi.",
+]
+
+[[kural]]
+kimlik = "Y016"
+ad = "Hâlbuki bitişik"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\bhalbu\s+ki\b']
+aciklama = "Kalıplaşmış hâlbuki bağlacında ki ayrı yazılmış."
+oneri = "Bağlacı hâlbuki biçiminde bitişik yaz."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:80 (Yüce Zerey, MIT)"
+yakalamali = ["Halbu ki o da çağrılmıştı.", "Gelmeyecekti, hâlbu ki yer ayırmıştık."]
+yakalamamali = ["Hâlbuki yer ayırmıştık.", "Kaldı ki işimiz henüz bitmedi."]
+
+[[kural]]
+kimlik = "Y017"
+ad = "Yanı sıra ayrı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\byanısıra\b']
+aciklama = "Yanı sıra sözü bitişik yazılmış."
+oneri = "Yanı sıra sözünü ayrı yaz."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:74 (Yüce Zerey, MIT)"
+yakalamali = ["Raporun yanısıra tabloyu da yolladı.", "Kitabın yanısıra harita da satılıyor."]
+yakalamamali = ["Raporun yanı sıra tabloyu da yolladı.", "Masada iki sıra kitap vardı."]
+
+[[kural]]
+kimlik = "Y018"
+ad = "İç içe ayrı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\biçiçe\b']
+aciklama = "İç içe ikilemesi bitişik yazılmış."
+oneri = "İkilemeyi iç içe biçiminde ayrı yaz."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:73 (Yüce Zerey, MIT)"
+yakalamali = ["Kâseler içiçe duruyordu.", "Sokaklar içiçe geçmiş."]
+yakalamamali = ["Kâseler iç içe duruyordu.", "İçe açılan kapıyı kapat."]
+
+[[kural]]
+kimlik = "Y019"
+ad = "Yan yana ayrı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\byanyana\b']
+aciklama = "Yan yana ikilemesi bitişik yazılmış."
+oneri = "İkilemeyi yan yana biçiminde ayrı yaz."
+kaynak = "insanca references/yazim-ve-terim.md:34 (Tahir Yıldız, MIT)"
+yakalamali = ["Yanyana oturduk.", "Tabloları yanyana astık."]
+yakalamamali = ["Yan yana oturduk.", "Yan kapı açık kaldı."]
+
+[[kural]]
+kimlik = "Y020"
+ad = "İş birliği ayrı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\bişbirli(?:ği|k){EK}\b']
+aciklama = "İş birliği sözü bitişik yazılmış."
+oneri = "İş birliği sözünü ayrı yaz ve ekleri birlik sözcüğünde koru."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:76 (Yüce Zerey, MIT)"
+yakalamali = ["Okullar işbirliği yaptı.", "Yeni işbirlikleri için toplantı düzenledik."]
+yakalamamali = ["Okullar iş birliği yaptı.", "İş bölümü toplantıdan önce yapıldı."]
+
+[[kural]]
+kimlik = "Y021"
+ad = "Oysaki bitişik"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\boysa\s+ki\b']
+aciklama = "Kalıplaşmış oysaki bağlacında ki ayrı yazılmış."
+oneri = "Oysaki bağlacını bitişik yaz."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:80 (Yüce Zerey, MIT)"
+yakalamali = ["Oysa ki beni önceden aramıştı.", "Bu ilk denemeydi, oysa ki son deneme sanmıştık."]
+yakalamamali = ["Oysaki beni önceden aramıştı.", "Demek ki beni önceden aramıştı."]
+
+[[kural]]
+kimlik = "Y022"
+ad = "Pek çok ve pek az ayrı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\bpek(?:çok|az){EK}\b']
+aciklama = "Pek çok veya pek az bitişik yazılmış."
+oneri = "Pek sözcüğünü sonraki sözcükten ayır."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:70 (Yüce Zerey, MIT)"
+yakalamali = ["Pekçok kişi yürüyerek geldi.", "Davetlilerin pekazı kaldı."]
+yakalamamali = ["Pek çok kişi yürüyerek geldi.", "Davetlilerin pek azı kaldı."]
+
+[[kural]]
+kimlik = "Y023"
+ad = "Terk etmek ayrı"
+grup = "yazim"
+sinif = "tdk"
+duzey = "guclu"
+agirlik = 3
+desen = ['\bterke[td]{EK}\b']
+aciklama = "Terk sözcüğü etmek fiiline bitişik yazılmış."
+oneri = "Terk etmek fiilini çekimli biçimlerinde de ayrı yaz."
+kaynak = "turkish-anti-ai-skill references/tdk-ve-noktalama.md:78 (Yüce Zerey, MIT)"
+yakalamali = ["Herkes binayı terketti.", "Köy geçen yüzyılda terkedilmiş."]
+yakalamamali = ["Herkes binayı terk etti.", "Köy geçen yüzyılda terk edilmiş."]

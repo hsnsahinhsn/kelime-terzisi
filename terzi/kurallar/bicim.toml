@@ -1,0 +1,101 @@
+# Tipografi ve Markdown biçimi.
+
+[[kural]]
+kimlik = "B001"
+ad = "Uzun tire"
+grup = "bicim"
+sinif = "yz"
+duzey = "guclu"
+agirlik = 3
+tip = "olcu"
+islev = "uzun_tire"
+aciklama = "Düz yazıda uzun tire (—) ya da boşluklu kısa tire var. Satır başındaki konuşma çizgisi hariç."
+oneri = "Ara sözü virgülle ya da ayrı cümleyle ver; açıklama için iki nokta kullan."
+kaynak = "I uslup.md 22, T tdk-ve-noktalama.md 14, H (üç beceri de uzun tireyi yasaklar)"
+yakalamali = ["Kapıyı açtı — içerisi karanlıktı.", "Bu yöntem – bence – daha iyi."]
+yakalamamali = ["— Nereye gidiyorsun?\n— Eve, dedi.", "2024-2026 dönemi.", "Kapıyı açtı, içerisi karanlıktı.", "Amaç MADDE 1 – (1) Bu Yönetmeliğin amacı usulleri belirlemektir."]
+
+[[kural]]
+kimlik = "B002"
+ad = "Kalın yazı bolluğu"
+grup = "bicim"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+tip = "olcu"
+islev = "sayim"
+desen = ['\*\*[^*\n]+\*\*']
+esik = { sabit = 3, kelime_basina = 150 }
+aciklama = "Markdown kalın yazısı vurgu için sıradan biçimde kullanılmış."
+oneri = "Kalın yazıyı yalnız okurun gözden kaçırmaması gereken bir iki yerde bırak."
+kaynak = "I uslup.md 23, olcum.py kalın sayımı"
+yakalamali = ["**Hız** önemlidir. **Güvenlik** de. **Maliyet** ayrıca. **Destek** her zaman. **Ölçek** de var."]
+yakalamamali = ["Kurulumdan önce **yedek alın**. Sonra programı açın."]
+
+[[kural]]
+kimlik = "B003"
+ad = "Kalın etiketli madde"
+grup = "bicim"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+tip = "olcu"
+islev = "sayim"
+desen = ['(?m)^\s*(?:[-*+•]|\d+[.)])\s+\*\*[^*\n]{1,40}:?\*\*:?']
+esik = { sabit = 2 }
+aciklama = "Madde listesi kalın etiket ve iki nokta ile kurulmuş (**Başlık:** açıklama)."
+oneri = "Akıl yürütmeyi düz yazıyla ver; liste gerçekten gerekiyorsa etiketleri kaldır."
+kaynak = "I uslup.md 24, T SKILL.md 58"
+yakalamali = ["- **Hız:** çok hızlı.\n- **Güvenlik:** çok güvenli.\n- **Fiyat:** uygun."]
+yakalamamali = ["- Hız: çok hızlı.\n- Güvenlik: çok güvenli.", "- **Uyarı:** önce yedek alın."]
+
+[[kural]]
+kimlik = "B004"
+ad = "Süs emoji"
+grup = "bicim"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+tip = "olcu"
+islev = "sayim"
+desen = ['[\U0001F300-\U0001FAFF☀-➿⭐✅](?:[\U0001F3FB-\U0001F3FF️]|‍[\U0001F300-\U0001FAFF☀-➿])*']
+esik = { sabit = 1, kelime_basina = 100 }
+haric_turler = ["sosyal"]
+aciklama = "Emoji başlık ya da madde süsü olarak kullanılmış."
+oneri = "Emojileri kaldır; sosyal medyada yazarın kendi alışkanlığını koru."
+kaynak = "I uslup.md 26"
+yakalamali = ["🚀 Lansman yarın. ✅ Hazırız. 🎉 Gelin."]
+yakalamamali = ["Lansman yarın. Hazırız.", "Eline sağlık 👍🏽."]
+
+[[kural]]
+kimlik = "B005"
+ad = "Başlıkta her kelime büyük"
+grup = "bicim"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+tip = "olcu"
+islev = "baslik_buyuk"
+haric_turler = ["akademik"]
+aciklama = "Ara başlıkta her kelime büyük harfle başlıyor (İngilizce başlık düzeni)."
+oneri = "Web ve iş yazısında ara başlıkta yalnız ilk kelimeyi ve özel adları büyük yaz."
+kaynak = "I uslup.md 25, T tdk-ve-noktalama.md 19"
+yakalamali = ["## Yapay Zekanın Yükselişi Ve Geleceği\n\nMetin."]
+yakalamamali = ["## Yapay zekanın yükselişi ve geleceği\n\nMetin.", "## Türkiye Büyük Millet Meclisi\n\nMetin."]
+
+[[kural]]
+kimlik = "B006"
+ad = "Noktalı virgül bolluğu"
+grup = "bicim"
+sinif = "uslup"
+duzey = "zayif"
+agirlik = 1
+tip = "olcu"
+islev = "sayim"
+desen = [';']
+esik = { sabit = 2, kelime_basina = 300 }
+aciklama = "Noktalı virgül sık. TDK'ya göre doğru olabilir; ama Claude metinlerinde belirgin bir iz."
+oneri = "Bağımsız iki cümleyi nokta ile ayır; noktalı virgülü yalnız TDK'nın sıraladığı yerlerde tut."
+kaynak = "H (noktalı virgül yasağı), Kocagül 2026 (YZ metninde noktalı virgül), kendi geliştirme setimiz"
+yakalamali = ["Hava güzel; deniz sakin. Yol açık; trafik az. Herkes mutlu; işler yolunda."]
+yakalamamali = ["Hava güzel, deniz sakin. Toplantıya Ali, Ayşe; Mehmet ve Can katıldı."]

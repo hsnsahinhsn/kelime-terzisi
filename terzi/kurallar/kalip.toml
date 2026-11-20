@@ -1,0 +1,332 @@
+# Cümle kuruluşu ve metin kalıpları.
+
+[[kural]]
+kimlik = "K001"
+ad = "Olumsuz karşıtlık kalıbı"
+grup = "kalip"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\b(?:asıl\s+)?(?:mesele|sorun)\s+(?:{S}\s+){1,6}değil{EK}\s*[,;]\s*(?:bir\s+)?{S}', '\bbu\s+(?:(?:yalnızca|sadece)\s+)?bir\s+(?:{S}\s+){1,5}değil{EK}\s*[,;]\s*(?:{S}\s+)?bir\s+{S}']
+en_az = 2
+haric_turler = ["anlati"]
+haric = ['\b(?:değil|değildi|değildir)\s*[,;]\s*(?:mi|mı|mu|mü)\b']
+aciklama = "Olumsuz karşıtlığın tekrarı, kendi başına söylenebilecek bir yargıyı sürekli bir reddin arkasına koyuyor."
+oneri = "Gerçek bir yanlış anlamayı düzeltiyorsan karşıtlığı koru, öbür cümlelerde asıl yargıyı doğrudan yaz."
+kaynak = "insanca references/kaliplar/dil.md:21–25 (Tahir Yıldız, MIT)"
+yakalamali = ["Mesele hız değil, güven. Bu bir araç değil, bir vizyondur.", "Bu bir işlem değil, bir deneyim. Asıl mesele büyümek değil, kalıcı olmak.", "Bu yalnızca bir araç değildi, bir dönüşümün başlangıcıydı. Bu sadece bir güncelleme değildi, bir dönemin sonuydu.", "Bu sadece bir güncelleme değil, yeni bir başlangıçtır. Bu yalnızca bir ekleme değil, farklı bir yaklaşımdır."]
+yakalamamali = ["Mesele fiyat değil, süre.", "Bu ahşap değil mi, diye sordu. Ağaç türünü henüz bilmiyoruz."]
+
+[[kural]]
+kimlik = "K002"
+ad = "Sadece değil, aynı zamanda"
+grup = "kalip"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\b(?:sadece|yalnızca|salt)\s+(?:{S}\s+){1,10}değil{EK}\s*[,;]?\s+aynı\s+zamanda\b']
+aciklama = "Ek bilgi, olumsuzluk ve aynı zamanda kalıbıyla uzun bir yoldan veriliyor."
+oneri = "İki öğeyi hem yapısıyla birleştir veya ikinci öğeyi de ile ekle."
+kaynak = "turkce-humanizer SKILL.md:213–233 (bushrabeg, MIT)"
+yakalamali = ["Bu sadece bir ekran değil, aynı zamanda bir kontrol paneli.", "İş yalnızca zaman kazandırmak değil aynı zamanda hataları azaltmaktır."]
+yakalamamali = ["Hem ekranı hem klavyeyi gönderin.", "Bu yalnızca bir kontrol paneli ve aynı zamanda satın alınabiliyor."]
+
+[[kural]]
+kimlik = "K003"
+ad = "Yapmakla kalmayıp"
+grup = "kalip"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b{S}(?:makla|mekle)\s+kalm(?:ayıp|adan|ıyor{EK}|az{EK}|adı{EK})\b']
+en_az = 2
+haric_turler = ["anlati"]
+aciklama = "Yapmakla kalmamak yapısı tekrarlandığında eklemeli cümleler aynı biçime giriyor."
+oneri = "Eklenen eylemi de ile bağla veya iki eylemi ayrı cümlelerde ver."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:20 (Yüce Zerey, MIT)"
+yakalamali = ["Araç veri toplamakla kalmayıp rapor da hazırlıyor. Ekip de raporu incelemekle kalmıyor, sahaya çıkıyor.", "Plan verimi artırmakla kalmaz, maliyeti de düşürür. Düzenleme maliyeti düşürmekle kalmadı, süreci de kısalttı."]
+yakalamamali = ["Bize kızmakla kalmadı, masayı da devirdi.", "Daha çok okumakla doğru kaynak kullanmak aynı şey değil."]
+
+[[kural]]
+kimlik = "K004"
+ad = "Adsız uzman atfı"
+grup = "kalip"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\b(?:uzmanlara|pek\s+çok\s+gözlemciye)\s+göre\b', '\buzmanlar,?\s+(?:belirt|söyle|söylüyor|vurgula|vurguluyor){EK}\s+ki\b']
+yer = "cumle_basi"
+haric_turler = ["haber", "anlati"]
+haric = ['\b(?:dr|prof|doç|uzm)\.', '\[\d+(?:\s*[,–-]\s*\d+)*\]', '\([^()]{1,50},\s*(?:19|20)\d{2}[a-z]?\)']
+aciklama = "Uzman görüşü kalıbı görüşün sahibini çoğu kez açık bırakıyor."
+oneri = "Kaynakta varsa uzmanın adını veya ilgili raporu görüşle birlikte ver."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:41 (Yüce Zerey, MIT)"
+yakalamali = ["Uzmanlara göre bu plan gereksiz.", "Pek çok gözlemciye göre bu artış sürecektir.", "Uzmanlar söylüyor ki giderler artacak.", "Uzmanlar vurguluyor ki süre uzayacak."]
+yakalamamali = ["Raporun yazarı Sema Işık'a göre bu artış sürecek.", "Uzmanlara göre bu artış sürecek (Işık, 2023).", "Ayşe ile Mehmet adlı uzmanlara göre bu rakam eksik."]
+
+[[kural]]
+kimlik = "K005"
+ad = "Araştırmaya genel gönderme"
+grup = "kalip"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\b(?:yapılan\s+)?(?:araştırmalar|çalışmalar),?\s+göster(?:iyor|di|mektedir)\s+ki\b']
+yer = "cumle_basi"
+haric = ['\[\d+(?:\s*[,–-]\s*\d+)*\]', '\([^()]{1,50},\s*(?:19|20)\d{2}[a-z]?\)']
+aciklama = "Araştırmalar kalıbı bulgunun hangi çalışmadan geldiğini söylemiyor."
+oneri = "Biliniyorsa araştırmanın adını ver ve bulguyu o çalışmanın kapsamıyla aktar."
+kaynak = "insanca references/kaliplar/icerik.md:44–54 (Tahir Yıldız, MIT); turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:41 (Yüce Zerey, MIT)"
+yakalamali = ["Yapılan araştırmalar göstermektedir ki daha çok katılımcı bekleniyor.", "Çalışmalar gösteriyor ki bu yöntem daha hızlı."]
+yakalamamali = ["Araştırmalar gösteriyor ki bu yöntem daha hızlı (Uçar, 2024).", "TÜİK'in 2024 araştırması kullanımın arttığını gösteriyor.", "TÜİK tarafından yapılan araştırmalar gösteriyor ki tüketim arttı."]
+
+[[kural]]
+kimlik = "K006"
+ad = "Sahnelenmiş soru"
+grup = "kalip"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['^(?:peki[ ,]+)?(?:neden\s+mi|sonuç\s+mu)\s*\?', '^peki[ ,]+(?:neden|bu\s+ne\s+anlama\s+geliyor)\s*\?', '^hiç\s+merak\s+ettiniz\s+mi\s*\?']
+en_az = 2
+haric_turler = ["anlati", "sosyal"]
+aciklama = "Kısa retorik soruların tekrarı metni sunum senaryosu gibi okutuyor."
+oneri = "Arka arkaya soru açmak yerine yanıtları veya gerekçeleri doğrudan yaz."
+kaynak = "insanca references/kaliplar/uslup.md:74–84 (Tahir Yıldız, MIT)"
+yakalamali = ["Peki neden? Çünkü yedek eksikti. Sonuç mu? İş iki gün durdu.", "Neden mi? Sunucu doluydu. Peki bu ne anlama geliyor? Yeni kayıt açılamadı."]
+yakalamamali = ["Peki neden? Ölçümü hangi saatte yaptınız?", "Sonuç ne zaman açıklanacak? Peki toplantı nerede yapılacak?"]
+
+[[kural]]
+kimlik = "K007"
+ad = "Cevap basit anonsu"
+grup = "kalip"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\b(?:cevap|yanıt)\s+(?:basit|çok\s+basit|şu|şudur)\s*:']
+haric_turler = ["anlati"]
+aciklama = "Cevabı ilan eden iki noktalı kalıp bilgiye geçmeden önce yapay bir durak koyuyor."
+oneri = "Cevap etiketini çıkarıp cevabı doğrudan yaz."
+kaynak = "insanca references/kaliplar/yapi.md:5–15 (Tahir Yıldız, MIT)"
+yakalamali = ["Cevap basit: Yedekleme yapılmadı.", "Yanıt çok basit: Bağlantı kesildi."]
+yakalamamali = ["İlk cevap basit görünüyordu.", "Cevap: 24 litre."]
+
+[[kural]]
+kimlik = "K008"
+ad = "Şablon yazı girişi"
+grup = "kalip"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['^bu\s+(?:yazıda|makalede|içerikte),?\s+(?:{S}\s+){1,12}(?:ele\s+alacağız|inceleyeceğiz|değineceğiz|keşfedeceğiz)\b', '^hepimizin\s+bildiği\s+gibi\b']
+yer = "giris"
+haric_turler = ["akademik", "hukuk", "teknik"]
+aciklama = "Şablon giriş konuyu açmak yerine metnin yapacaklarını ilan ediyor."
+oneri = "Yazının ilk cümlesinde konuyla ilgili ilk bulguyu veya somut sorunu belirt."
+kaynak = "turkish-anti-ai-skill SKILL.md:54 (Yüce Zerey, MIT); insanca scripts/olcum.py:132–135 (Tahir Yıldız, MIT)"
+yakalamali = ["Bu yazıda uzaktan çalışmanın yararlarını ele alacağız.", "Hepimizin bildiği gibi plan yapmak önemlidir."]
+yakalamamali = ["Yol kapandı. Ekip döndü. Bu yazıda kesintinin nedenlerini ele alacağız.", "Uzaktan çalışma başladığında ekip üç gün ofise geliyordu."]
+
+[[kural]]
+kimlik = "K009"
+ad = "Hazır özet kapanışı"
+grup = "kalip"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['^(?:sonuç\s+olarak|kısacası|özetle(?=\s*,\s*{S})|özetlemek\s+gerekirse|son\s+tahlilde)\b']
+yer = "kapanis"
+haric_turler = ["akademik", "hukuk", "anlati"]
+haric = ['^özetle\s*,\s*(?:ve|sonra|ardından)\b']
+aciklama = "Hazır özet etiketi metnin zaten kapanışta olduğunu bir kez daha söylüyor."
+oneri = "Etiketi çıkar ve okurun hatırlaması gereken sonucu doğrudan ver."
+kaynak = "insanca scripts/olcum.py:138–141 (Tahir Yıldız, MIT); turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:39 (Yüce Zerey, MIT)"
+yakalamali = ["Sonuç olarak, planın süresi uzadı.", "Kısacası, yeni bütçe gerekiyor.", "Özetle, iki dosya eksik."]
+yakalamamali = ["Sonuç olarak ekip taşındı. Depo açık kaldı. Yedekler orada duruyor.", "Özetle ilgili iki düzeltme istedik.", "Metni oku. Özetle ve gönder.", "Metni oku. Özetle.", "Özetle uğraşma, tam metni gönder."]
+
+[[kural]]
+kimlik = "K010"
+ad = "Belirtmek gerekir ki"
+grup = "kalip"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\b(?:önemle\s+)?belirtmek\s+gerek(?:ir|iyor|mektedir|ti)\s+ki\b', '\b(?:unutulmamalı|vurgulanmalı)(?:dır)?\s+ki\b']
+aciklama = "Vurgu kalıbı okura bilgi vermeden önce o bilginin söyleneceğini bildiriyor."
+oneri = "Uyarının kendisini başa al ve hangi eylemin gerektiğini belirt."
+kaynak = "insanca references/kaliplar/iletisim-dolgu-kurgu.md:63–67 (Tahir Yıldız, MIT)"
+yakalamali = ["Önemle belirtmek gerekir ki dosya bugün kapanır.", "Unutulmamalıdır ki son başvuru yarın."]
+yakalamamali = ["Rapor dosyanın bugün kapanacağını belirtiyor.", "Son başvuru tarihi sayfanın başında belirtilmelidir."]
+
+[[kural]]
+kimlik = "K011"
+ad = "Söz konusu ve benzeri göndermeler"
+grup = "kalip"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:söz\s+konusu|bahsi\s+geçen)\s+(?!(?:değil|ol(?:du|ma|uyor|acak|abilir|an|ur|unca|sa|muş|up)|edil|et(?:ti|me)){EK}\b)(?!m[ıiuü](?:yd[ıiuü]{EK}|ym[ıiuü]ş{EK}|d[ıiuü]r{EK}|s[ıiuü]n{EK}|y[ıiuü]z)?\b){S}']
+en_az = 2
+haric_turler = ["hukuk", "akademik"]
+aciklama = "Önceden anılan öğeyi resmî bir kalıpla tekrar işaretlemek anlatımı ağırlaştırıyor."
+oneri = "Gönderme açık kalıyorsa bu sözcüğünü veya öğenin adını kullan."
+kaynak = "turkce-humanizer SKILL.md:205–207 (bushrabeg, MIT); turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:36 (Yüce Zerey, MIT)"
+yakalamali = ["Söz konusu algoritma yeniden çalışacak. Söz konusu dosya da güncellenecek.", "Bahsi geçen etkinlik henüz başlamadı. Söz konusu olay dün yaşandı."]
+yakalamamali = ["İndirim söz konusu değil. Taşınma da söz konusu olmayacak.", "Söz konusu dosya dün geldi.", "Para söz konusu olunca konuşuruz. Para söz konusu olunca karar değişir.", "Para söz konusu olsa konuşuruz. Yeni bir gider söz konusu olsaydı haber verirdik.", "Yeni bir masraf söz konusu mu? Bir zam söz konusu mu?"]
+
+[[kural]]
+kimlik = "K012"
+ad = "Resmî yüklemden sonra ki"
+grup = "kalip"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:göstermektedir|belirtmektedir|kanıtlamaktadır|ortaya\s+koymaktadır)\s+ki\b']
+haric_turler = ["akademik", "hukuk"]
+# K005'in cümle başı koşulu ve atıf istisnaları burada da geçerli.
+haric = ['^(?![^\n]*(?:\[\d+(?:\s*[,–-]\s*\d+)*\]|\([^()]{1,50},\s*(?:19|20)\d{2}[a-z]?\)))[ "\x27“«(—–*\-]*(?:yapılan\s+)?(?:araştırmalar|çalışmalar),?\s+göstermektedir\s+ki\b']
+aciklama = "Resmî yüklemden sonraki ki bağlacı gösterilen bilgiyi yüklemin arkasına bırakıyor."
+oneri = "Gösterilen bilgiyi nesne yap ve örneğin kayıtlar kesintinin uzadığını gösteriyor diye yaz."
+kaynak = "turkish-anti-ai-skill scripts/detect_tr_ai.py:72 (Yüce Zerey, MIT)"
+yakalamali = ["Rapor göstermektedir ki kesinti uzadı.", "Kayıtlar ortaya koymaktadır ki işlem durdu.", "Son araştırmalar göstermektedir ki hasta sayısı azaldı.", "Araştırmalar göstermektedir ki artış sürüyor (Tan, 2024)."]
+yakalamamali = ["Rapor kesintinin uzadığını göstermektedir.", "Kaldı ki kayıtlar henüz incelenmedi.", "Yapılan araştırmalar göstermektedir ki hasta sayısı azaldı."]
+
+[[kural]]
+kimlik = "K013"
+ad = "Tarafından ve dolaylı eylem"
+grup = "kalip"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\btarafından\s+(?:gerçekleştiril|sağlan|icra\s+edil){EK}\b']
+en_az = 2
+haric_turler = ["akademik", "hukuk", "haber"]
+aciklama = "Eyleyeni adıyla veren dolaylı edilgenlerin tekrarı anlatımı uzatıyor."
+oneri = "Odağı koruyabiliyorsan işi yapanı özneye ve yapılan işi doğrudan bir fiile taşı."
+kaynak = "turkish-anti-ai-skill references/sentaks-ve-morfoloji.md:165–174 (Yüce Zerey, MIT); turkce-humanizer SKILL.md:266–267 (bushrabeg, MIT)"
+yakalamali = ["Denetim ekip tarafından gerçekleştirildi. Kayıt birim tarafından sağlandı.", "Toplantı üyeler tarafından gerçekleştirildi. Oturum komite tarafından icra edildi."]
+yakalamamali = ["Köprü Mimar Sinan tarafından yapıldı. Yazıt ustalar tarafından işlendi.", "Denetim ekip tarafından gerçekleştirildi."]
+
+[[kural]]
+kimlik = "K014"
+ad = "Bu da anlamına geliyor"
+grup = "kalip"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bbu\s+da,?\s+(?:{S}\s+){1,12}anlamına\s+gel(?:iyor{EK}|ir{EK}|di{EK}|mektedir)\b']
+yer = "cumle_basi"
+en_az = 2
+aciklama = "Bu da ile açılan anlam açıklaması yinelendiğinde neden veya çıkarım dolaylı anlatılıyor."
+oneri = "Sonuçla öncülü doğrudan bağla ve ilişkinin neden mi yorum mu olduğunu koru."
+kaynak = "turkish-anti-ai-skill references/sentaks-ve-morfoloji.md:218–223 (Yüce Zerey, MIT)"
+yakalamali = ["Bu da yükün artması anlamına geliyor. Bu da daha çok beklemek anlamına gelir.", "Bu da kayıtların silinmesi anlamına geldi. Bu da erişimin bitmesi anlamına geliyor."]
+yakalamamali = ["Bu da önceki işlemin tamamlandığı anlamına geliyor.", "Bu sözcük yol anlamına gelir. Bu da dilde sık kullanılır."]
+
+[[kural]]
+kimlik = "K015"
+ad = "Özellik bildiren sahip olmak"
+grup = "kalip"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:yüksek\s+(?:bir\s+)?(?:hıza|kapasiteye|performansa)|düşük\s+(?:bir\s+)?gecikmeye|(?:iki|üç|dört|beş|\d+)\s+(?:katmana|bölüme|seçeneğe|özelliğe))\s+sahip(?:t(?:ir|ti){EK}|\s+ol{EK})?\b']
+en_az = 2
+aciklama = "Sahip olmak kalıbı sayılabilen parçaları veya teknik özellikleri dolaylı biçimde anlatıyor."
+oneri = "Ölçüyü doğrudan ver veya yapı için üç katmandan oluşur gibi açık bir yüklem kullan."
+kaynak = "turkish-anti-ai-skill references/sentaks-ve-morfoloji.md:192 (Yüce Zerey, MIT)"
+yakalamali = ["Motor yüksek bir hıza sahip. Kutu üç katmana sahiptir.", "Yeni katman düşük gecikmeye sahip olacak. Menü dört seçeneğe sahip."]
+yakalamamali = ["Ayşe köpeğine sahip çıktı. Bir tarlaya da sahip oldu.", "Cihaz yüksek kapasiteye sahiptir."]
+
+[[kural]]
+kimlik = "K016"
+ad = "Bir kurum olarak"
+grup = "kalip"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bbir\s+(?:(?:küresel|yerel|dijital|öncü)\s+)?(?:şirket|kurum|ekip|marka|platform)\s+olarak\b']
+yer = "cumle_basi"
+en_az = 2
+haric_turler = ["hukuk"]
+aciklama = "Kurum kimliğinin bir ve olarak ile sürekli başa alınması özneyi dolaylı kuruyor."
+oneri = "Kimlik bağlamdan belli ise doğrudan yapılan işi söyle veya kurumun adını özne yap."
+kaynak = "insanca references/kaliplar/dil.md:106–108 (Tahir Yıldız, MIT); insanca references/kaliplar/yapi.md:71–75 (Tahir Yıldız, MIT)"
+yakalamali = ["Bir şirket olarak eğitim veriyoruz. Bir ekip olarak sonuçları yazacağız.", "Bir küresel marka olarak atölye açtık. Bir kurum olarak üç okulu daha destekleyeceğiz."]
+yakalamamali = ["Bir öğretmen olarak öğrencilerin görüşünü merak ediyorum.", "Bir ekip olarak ödül aldık."]
+
+[[kural]]
+kimlik = "K017"
+ad = "İlk adım olarak"
+grup = "kalip"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:ilk|ikinci|son|sonraki)\s+adım\s+olarak\b']
+en_az = 2
+haric_turler = ["teknik"]
+aciklama = "Adım sıralamasının olarak ile tekrarlanması işlemleri dolaylı sunuyor."
+oneri = "Sırayı ilk adımda veya sonra gibi kısa ifadelerle ver."
+kaynak = "turkish-anti-ai-skill references/sentaks-ve-morfoloji.md:197 (Yüce Zerey, MIT)"
+yakalamali = ["İlk adım olarak dosyayı açın. Son adım olarak kaydedin.", "İlk adım olarak bütçeyi okuyalım. İkinci adım olarak tarihleri yazalım."]
+yakalamamali = ["İlk adım olarak dosyayı açtık.", "İlk adımda ekibi kurduk. Son adımda arşivi açtık."]
+
+[[kural]]
+kimlik = "K018"
+ad = "Bağlam ve çerçeve tekrarları"
+grup = "kalip"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bbu\s+(?:bağlamda|doğrultuda|çerçevede)\b']
+yer = "cumle_basi"
+en_az = 2
+haric_turler = ["hukuk", "akademik"]
+aciklama = "Aynı tür bağlam göndermelerinin tekrarı cümlelerin mantıksal ilişkisini açık bırakıyor."
+oneri = "Gerekli yerde nedeni, karşıtlığı veya sonucu belirten bağlacı seç."
+kaynak = "turkce-humanizer SKILL.md:205–207 (bushrabeg, MIT)"
+yakalamali = ["Bu bağlamda ekibi büyüttük. Bu çerçevede iki görev açtık.", "Bu doğrultuda bütçe değişti. Bu doğrultuda takvim de değişti."]
+yakalamamali = ["Bu bağlamda başvuruyu kabul ettik.", "Resim bu çerçevede duruyor. Önce çiviyi çıkar."]
+
+[[kural]]
+kimlik = "K019"
+ad = "Çifte ihtiyat"
+grup = "kalip"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b{S}(?:abileceği|ebileceği)\s+düşünülebilir{EK}\b', '\b{S}(?:abilme|ebilme)\s+ihtimali\s+bulunmaktadır\b']
+haric_turler = ["akademik", "hukuk"]
+aciklama = "Aynı olasılık üst üste gelen yeterlik ve ihtiyat ifadeleriyle iki kez işaretleniyor."
+oneri = "Belirsizliği koruyarak bir olasılık ifadesi bırak."
+kaynak = "insanca references/kaliplar/iletisim-dolgu-kurgu.md:74–82 (Tahir Yıldız, MIT); turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:40 (Yüce Zerey, MIT)"
+yakalamali = ["Ölçümü etkileyebileceği düşünülebilir.", "Veriyi değiştirebilme ihtimali bulunmaktadır."]
+yakalamamali = ["Ölçümü etkileyebilir.", "Ekibin hangi seçeneği tercih edebileceği henüz belirsiz."]
+
+[[kural]]
+kimlik = "K020"
+ad = "Olma özelliğine sahip olmak"
+grup = "kalip"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\bolma\s+özelliğine\s+sahip(?:t(?:ir|ti){EK}|\s+ol{EK})?\b']
+aciklama = "Olma özelliğine sahip olmak bir niteliği art arda gelen soyut sözcüklerle aktarıyor."
+oneri = "Nitelik bildiren sözü doğrudan yüklem yap ve gereksiz tamlamayı çıkar."
+kaynak = "insanca references/kaliplar/yapi.md:32–42 (Tahir Yıldız, MIT)"
+yakalamali = ["Bu malzeme esnek olma özelliğine sahiptir.", "Kumaş su geçirmez olma özelliğine sahip olacak."]
+yakalamamali = ["Malzeme esnektir.", "Yazılımın arama özelliği yeni sürümde açılıyor."]
+
+[[kural]]
+kimlik = "K021"
+ad = "Şunu söylemek mümkün"
+grup = "kalip"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:bu\s+noktada\s+)?şunu\s+söylemek\s+mümkün(?:dür)?\s*(?::|\bki\b)', '\bdikkat\s+edilmesi\s+gereken\s+(?:bir\s+)?diğer\s+husus\s+da\b']
+aciklama = "Yorumun önündeki dolgu asıl bilgiyi geciktiriyor."
+oneri = "Vurgulanacak olguyu ilk sözcüklerden başlayarak söyle."
+kaynak = "insanca references/kaliplar/iletisim-dolgu-kurgu.md:63–67 (Tahir Yıldız, MIT)"
+yakalamali = ["Bu noktada şunu söylemek mümkün: Kayıt kapanıyor.", "Dikkat edilmesi gereken bir diğer husus da bütçedir."]
+yakalamamali = ["Bu kararı etkileyen iki durum var.", "Bir sözcüğün yanlış söylendiğini fark etmek mümkün."]

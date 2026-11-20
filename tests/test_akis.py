@@ -1,0 +1,243 @@
+import hashlib
+import io
+import json
+import random
+import tempfile
+import unittest
+from contextlib import redirect_stderr, redirect_stdout
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import Mock, call, patch
+
+from terzi import akis, bilgi, duzeltici, model
+from terzi.__main__ import main
+from terzi.denetci import denetle
+
+KAYNAK = "Toplantı salı günü saat üçte başlayacak."
+TUR = "teknik"
+TEMIZ = json.dumps(dict(eksik=[], degisen=[], eklenen=[]))
+SORUN = json.dumps(dict(eksik=[dict(kaynakta="salı günü", aciklama="Gün eksik.")], degisen=[], eklenen=[]))
+
+
+def okur_yaniti(yapay=(), **puanlar):
+    return json.dumps(dict(insan_olasilik=50, dogal=3, yapay=list(yapay), gerekce="Ritim eşit.") | puanlar)
+
+
+class AkisTest(unittest.TestCase):
+    def setUp(self):
+        self.orn = self.enterContext(patch.object(akis, "ornekler", return_value=["Bir insan örneği."]))
+        self.modeller = Mock()
+        self.yazar = self.modeller.yazar
+        self.okur = self.modeller.okur
+        self.denetci = self.modeller.denetci
+        self.anlam = self.modeller.anlam
+        self.yazar.return_value = KAYNAK
+        self.okur.return_value = okur_yaniti()
+        self.denetci.return_value = self.anlam.return_value = TEMIZ
+
+    def duzelt(self, **secenek):
+        return akis.duzelt(KAYNAK, TUR, self.yazar, self.okur, self.denetci, **secenek)
+
+    def onarim_istemi(self, once):
+        return duzeltici.bilgi_istem(KAYNAK, once, bilgi.coz(SORUN).satirlar(), TUR)
+
+    def test_sira_modeller_ve_istemler(self):
+        ilk = "Toplantı saat üçte başlayacak."
+        onarilmis = "**Toplantı** salı günü saat üçte başlayacak."
+        yeniden = "Saat üçte başlayacak toplantı."
+        son = "Salı günü saat üçte toplanıyoruz."
+        yapay = ["Toplantı", "salı günü", "başlayacak"]
+        self.yazar.side_effect = [f" {ilk}\n", onarilmis, yeniden, f"\n{son}  "]
+        self.denetci.side_effect = [SORUN, SORUN]
+        self.okur.return_value = f"```json\n{okur_yaniti([' ', None, *yapay, 'dördüncü'])}\n```"
+
+        sonuc = self.duzelt(anlam_model=self.anlam)
+
+        self.orn.assert_called_once_with(KAYNAK, TUR)
+        self.assertEqual(self.modeller.mock_calls, [
+            call.yazar(duzeltici.istem(KAYNAK, TUR, denetle(KAYNAK, TUR), self.orn.return_value,
+                                     kip="kisa", taban=None, bulgu=False)),
+            call.denetci(bilgi.istem(KAYNAK, ilk)),
+            call.yazar(self.onarim_istemi(ilk)),
+            call.okur(akis.okur_istem(onarilmis)),
+            call.yazar(akis.yeniden_istem(onarilmis, TUR, yapay, "Ritim eşit.")),
+            call.denetci(bilgi.istem(KAYNAK, yeniden)),
+            call.yazar(self.onarim_istemi(yeniden)),
+            call.anlam(bilgi.siki_istem(KAYNAK, son)),
+            call.anlam(bilgi.hedef_istem(KAYNAK, son)),
+        ])
+        self.assertEqual(sonuc.metin, son)
+        self.assertEqual([x["adim"] for x in sonuc.adimlar], ["ilk_yazim", "bilgi", "okur", "bilgi", "anlam", "anlam"])
+        self.assertTrue(sonuc.adimlar[1]["onarim"])
+        self.assertTrue(sonuc.adimlar[3]["onarim"])
+
+    def test_bos_yapay_yeniden_yazmaz_ve_anlam_yok(self):
+        sonuc = self.duzelt(anlam="yok", anlam_model=self.anlam)
+        self.assertEqual(self.yazar.call_count, 1)
+        self.assertEqual(self.denetci.call_args_list, [call(bilgi.istem(KAYNAK, KAYNAK))] * 2)
+        self.anlam.assert_not_called()
+        self.assertFalse(sonuc.adimlar[2]["yeniden_yazim"])
+        self.assertEqual(len(sonuc.adimlar), 4)
+
+    def test_bilgi_bozuk_yaniti_yineler_ve_ikinci_hatada_durur(self):
+        self.denetci.side_effect = ["bozuk", TEMIZ, "bozuk", "bozuk"]
+        with self.assertRaisesRegex(akis.AkisHatasi, "bilgi denetimi iki kez"):
+            self.duzelt(anlam="yok")
+        self.assertEqual(self.denetci.call_args_list, [call(bilgi.istem(KAYNAK, KAYNAK))] * 4)
+        self.okur.assert_called_once()
+
+    def test_okur_bozuk_yaniti_yineler(self):
+        self.okur.side_effect = ["{bozuk}", okur_yaniti(insan_olasilik=100, dogal=1)]
+        self.duzelt(anlam="yok")
+        self.assertEqual(self.okur.call_args_list, [call(akis.okur_istem(KAYNAK))] * 2)
+
+    def test_okur_gecersiz_puanlarda_durur(self):
+        self.okur.side_effect = [okur_yaniti(insan_olasilik=101), okur_yaniti(dogal=0)]
+        with self.assertRaisesRegex(akis.AkisHatasi, "okur yanıtı iki kez"):
+            self.duzelt()
+        self.assertEqual(self.okur.call_count, 2)
+        self.denetci.assert_called_once()
+
+    def test_anlam_her_onarimi_denetler_ve_ikide_durur(self):
+        bir = "Salı günü saat üçte toplantı var."
+        iki = "Salı saat üçte toplantı var."
+        self.yazar.side_effect = [KAYNAK, bir, iki]
+        self.anlam.side_effect = [SORUN, SORUN, SORUN]
+        sonuc = self.duzelt(anlam_model=self.anlam, anlam="siki")
+        self.assertEqual(sonuc.metin, iki)
+        self.assertEqual(sonuc.adimlar[-1]["onarim"], 2)
+        self.assertEqual(self.anlam.call_args_list, [call(bilgi.siki_istem(KAYNAK, m)) for m in (KAYNAK, bir, iki)])
+        self.assertEqual(self.yazar.call_args_list[1:], [call(self.onarim_istemi(m)) for m in (KAYNAK, bir)])
+
+    def test_siki_hedef_iki_donguyu_sirayla_calistirir(self):
+        bir = "Salı günü saat üçte toplantı var."
+        self.yazar.side_effect = [KAYNAK, bir]
+        self.anlam.side_effect = [TEMIZ, SORUN, TEMIZ]
+        sonuc = self.duzelt(anlam_model=self.anlam, anlam="siki-hedef")
+        self.assertEqual(sonuc.metin, bir)
+        self.assertEqual(self.anlam.call_args_list, [call(bilgi.siki_istem(KAYNAK, KAYNAK)),
+                                                     call(bilgi.hedef_istem(KAYNAK, KAYNAK)),
+                                                     call(bilgi.hedef_istem(KAYNAK, bir))])
+        self.assertEqual([(x["kip"], x["onarim"]) for x in sonuc.adimlar[-2:]], [("siki", 0), ("hedef", 1)])
+
+    def test_anlam_temizlenince_durur_ve_varsayilan_model_yazar(self):
+        yeni = "Salı günü saat üçte toplanıyoruz."
+        self.yazar.side_effect = [KAYNAK, "{}", SORUN, yeni, TEMIZ, TEMIZ]
+        sonuc = self.duzelt()
+        self.assertEqual(sonuc.metin, yeni)
+        self.assertEqual(akis.ANLAM_VARSAYILAN, "siki-hedef")
+        self.assertEqual([(x["kip"], x["onarim"]) for x in sonuc.adimlar[-2:]], [("siki", 1), ("hedef", 0)])
+        self.assertEqual(self.yazar.call_args_list[1:], [
+            call(bilgi.siki_istem(KAYNAK, KAYNAK)), call(bilgi.siki_istem(KAYNAK, KAYNAK)),
+            call(self.onarim_istemi(KAYNAK)), call(bilgi.siki_istem(KAYNAK, yeni)), call(bilgi.hedef_istem(KAYNAK, yeni)),
+        ])
+
+    def test_anlam_iki_hata_sonra_durur(self):
+        self.anlam.return_value = "{}"
+        with self.assertRaisesRegex(akis.AkisHatasi, "anlam denetimi iki kez"):
+            self.duzelt(anlam_model=self.anlam)
+        self.assertEqual(self.anlam.call_count, 2)
+        self.yazar.assert_called_once()
+
+    def test_anlam_yaridan_kisa_onarimi_reddeder(self):
+        self.anlam.return_value = SORUN
+        self.yazar.side_effect = [KAYNAK, "Salı günü."]
+        with self.assertRaisesRegex(akis.AkisHatasi, "çok kısa"):
+            self.duzelt(anlam_model=self.anlam)
+        self.anlam.assert_called_once()
+
+    def test_bos_yazim_hata_verir(self):
+        self.yazar.return_value = " \n "
+        with self.assertRaisesRegex(akis.AkisHatasi, "boş metin"):
+            self.duzelt()
+        self.denetci.assert_not_called()
+
+
+class IstemTest(unittest.TestCase):
+    def test_ornek_havuzlari(self):
+        with tempfile.TemporaryDirectory() as dizin:
+            kok = Path(dizin)
+            havuz = [f"Örnek {i}" for i in range(10)]
+            (kok / "ajan.jsonl").write_text("\n".join(json.dumps(dict(metin=m)) for m in havuz), encoding="utf-8")
+            (kok / "blog.jsonl").touch()
+            (kok / "ornekler").mkdir()
+            (kok / "ornekler" / "ornekler.json").write_text(
+                json.dumps({TUR: [dict(metin=m) for m in havuz[:2]]}), encoding="utf-8")
+            with patch.dict(akis.os.environ, {"KT_GUNDELIK_HAVUZ": dizin}), patch.object(akis, "PAKET", kok):
+                tohum = hashlib.sha256(KAYNAK.encode("utf-8")).hexdigest()
+                beklenen = random.Random(tohum).sample(havuz, 6)
+                self.assertEqual(akis.ornekler(KAYNAK, "ajan"), beklenen)
+                self.assertEqual(akis.ornekler(KAYNAK, "ajan"), beklenen)
+                self.assertCountEqual(akis.ornekler(KAYNAK, TUR), havuz[:2])
+                for tur in ("blog", "eposta", "genel"):
+                    self.assertEqual(akis.ornekler(KAYNAK, tur), [])
+
+
+class ModelTest(unittest.TestCase):
+    def test_claude_komut_ortam_ve_json(self):
+        env = dict(PATH="/bin", CLAUDECODE="1", CLAUDE_EFFORT="high", claude_x="1", ANTHROPIC_TEST="1", anthropic_x="1")
+        yanit = dict(type="result", subtype="success", is_error=False, stop_reason="end_turn", result=" Metin. ")
+
+        def calistir(komut, **ayarlar):
+            self.assertEqual(komut, [
+                "claude", "-p", "--output-format", "json", "--setting-sources", "", "--tools", "",
+                "--strict-mcp-config", "--no-session-persistence", "--model", "claude-opus-5-5",
+            ])
+            bos = Path(ayarlar.pop("cwd"))
+            self.assertEqual(list(bos.iterdir()), [])
+            ortam = dict(PATH="/bin", CLAUDE_CODE_DISABLE_CLAUDE_MDS="1", CLAUDE_CODE_DISABLE_AUTO_MEMORY="1")
+            self.assertEqual(ayarlar, dict(input="İstem.", env=ortam, capture_output=True,
+                                           text=True, timeout=900))
+            return SimpleNamespace(returncode=0, stdout=json.dumps(yanit))
+
+        with patch.dict(model.os.environ, env, clear=True), patch.object(model.subprocess, "run", side_effect=calistir) as kos:
+            cagir = model.claude(model.OPUS)
+            self.assertEqual(cagir("İstem."), "Metin.")
+            self.assertFalse(Path(kos.call_args.kwargs["cwd"]).exists())
+            kos.side_effect = None
+            for ham in ("bozuk", "[]", json.dumps(dict(yanit, stop_reason="max_tokens"))):
+                kos.return_value = SimpleNamespace(returncode=0, stdout=ham)
+                with self.subTest(ham=ham), self.assertRaises(model.ModelHatasi):
+                    cagir("İstem.")
+
+
+class KomutTest(unittest.TestCase):
+    def calis(self, *arguman):
+        with patch("sys.stdin", io.StringIO(KAYNAK)), redirect_stdout(io.StringIO()) as cikti:
+            self.assertEqual(main(list(arguman)), 0)
+        return cikti.getvalue()
+
+    def test_duzelt_metin_ve_json(self):
+        opus = Mock(side_effect=[KAYNAK, TEMIZ, TEMIZ, KAYNAK])  # yazım, sıkı denetim, hedefli denetim; ikinci çağrı yazım
+        sonnet = Mock(side_effect=[TEMIZ, okur_yaniti(), TEMIZ] * 2)
+        with patch.object(model, "claude", side_effect=[opus, sonnet] * 2) as fabrika:
+            sonuc = json.loads(self.calis("duzelt", "-", "--tur", TUR, "--json"))
+            self.assertEqual(self.calis("duzelt", "-", "--tur", TUR, "--anlam", "yok"), KAYNAK + "\n")
+        self.assertEqual(fabrika.call_args_list, [call("claude-opus-5-5"), call("claude-sonnet-5-5")] * 2)
+        self.assertEqual(sonuc["metin"], KAYNAK)
+        self.assertEqual([x["kip"] for x in sonuc["adimlar"][-2:]], list(akis.ANLAM_DONGULERI[akis.ANLAM_VARSAYILAN]))
+
+    def test_istem_v11_ilk_istemle_ayni(self):
+        orn = ["Bir insan örneği."]
+        with patch.object(akis, "ornekler", return_value=orn), patch.object(model, "claude") as fabrika:
+            cikti = self.calis("istem", "-", "--tur", TUR, "--v11")
+        self.assertEqual(cikti, duzeltici.istem(KAYNAK, TUR, denetle(KAYNAK, TUR), orn,
+                                               kip="kisa", taban=None, bulgu=False))
+        fabrika.assert_not_called()
+
+    def test_duzelt_model_hatasini_standart_hataya_yazar(self):
+        yazar = Mock(side_effect=model.ModelHatasi("çağrı başarısız"))
+        with patch.object(model, "claude", return_value=yazar), patch("sys.stdin", io.StringIO(KAYNAK)):
+            with redirect_stdout(io.StringIO()) as cikti, redirect_stderr(io.StringIO()) as hata:
+                self.assertEqual(main(["duzelt", "-", "--tur", TUR, "--json"]), 1)
+        self.assertEqual(cikti.getvalue(), "")
+        self.assertIn("çağrı başarısız", hata.getvalue())
+
+
+class BosGirdiTest(unittest.TestCase):
+    def test_bos_metin_model_cagirmaz(self):
+        cagri = []
+        model = lambda istem: cagri.append(istem) or ""
+        with self.assertRaises(akis.AkisHatasi):
+            akis.duzelt("  \n ", "haber", model, model, model)
+        self.assertEqual(cagri, [])

@@ -1,0 +1,404 @@
+# Şişirilmiş sözler ve dolaylı eylem kalıpları.
+
+[[kural]]
+kimlik = "S001"
+ad = "Yadsınamaz kesinliği"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\byadsınamaz{EK}\b', '\binkar\s+edilemez{EK}\b']
+en_az = 2
+aciklama = "Tekrarlanan kesinlik vurgusu iddianın dayanağını okura bırakıyor."
+oneri = "Vurgu yerine metinde verilen kanıtı yaz ve iddianın kesinlik derecesini koru."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:13 (Yüce Zerey, MIT)"
+yakalamali = ["Bu fark yadsınamazdır. Sağladığı yarar da yadsınamaz.", "Artışın etkisi inkâr edilemez. Değişimin önemi yadsınamaz."]
+yakalamamali = ["Tanığın katkısı yadsınamaz.", "Bu iddiayı yadsıdığını mahkemede söyledi. Veriler eksik."]
+
+[[kural]]
+kimlik = "S002"
+ad = "Âdeta tekrarı"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\badeta\b']
+en_az = 2
+haric_turler = ["anlati"]
+aciklama = "Yinelenen âdeta benzetmeleri anlatımı tekdüzeleştiriyor."
+oneri = "Benzetmelerden anlam taşıyanı bırak ve diğer cümlede gözlemi doğrudan anlat."
+kaynak = "turkce-humanizer SKILL.md:251 (bushrabeg, MIT)"
+yakalamali = ["Arayüz âdeta bir pusula. Gösterge de âdeta bir fener.", "Bu paket adeta bir köprü. Yeni plan adeta bir kalkan."]
+yakalamamali = ["Soğuktan âdeta donduk.", "Daha önce âdet gören uygulamayı değiştirdik."]
+
+[[kural]]
+kimlik = "S003"
+ad = "Derinlemesine inceleme"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bderinlemesine\s+(?:incele|inceliyor|analiz\s+e[td]|in(?:di|iyor|ecek|mek|erek|miş|elim|er)|dal|değerlendir){EK}\b']
+en_az = 2
+haric_turler = ["akademik"]
+aciklama = "İncelemenin derinliğini yineleyen kalıp incelemenin kapsamını açıklamıyor."
+oneri = "İncelenen yönleri belirt veya sadece inceleme fiilini kullan."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:15 (Yüce Zerey, MIT)"
+yakalamali = ["Konuyu derinlemesine inceleyeceğiz. Veriyi de derinlemesine analiz edeceğiz.", "Ayrıntılara derinlemesine dalacağız. Bulguları derinlemesine değerlendireceğiz."]
+yakalamamali = ["Sonuçları derinlemesine inceledi.", "Taşı derinlemesine oymak için ince uç kullandı."]
+
+[[kural]]
+kimlik = "S004"
+ad = "Geniş yelpaze"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bgeniş\s+(?:bir\s+)?yelpaze{EK}\b']
+en_az = 2
+haric = ['\byelpaze{EK}\s+(?:yelle|yelliyor|salla|sallıyor|katla|katlıyor|aç|kapat){EK}\b']
+aciklama = "Geniş yelpaze sözü tekrarlandığında çeşitliliği hangi öğelerin oluşturduğu belirsiz kalıyor."
+oneri = "Metinde adı geçen çeşitleri sırala veya kapsanan alanı adlandır."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:16 (Yüce Zerey, MIT)"
+yakalamali = ["Geniş bir yelpazede servis veriyoruz. Mağaza da geniş bir yelpaze sunuyor.", "Geniş bir yelpazeyi kapsıyoruz. Eğitimler de geniş bir yelpazeye yayılıyor."]
+yakalamamali = ["Sınıfta geniş bir yelpazeyle yellendi. Kardeşi geniş bir yelpazeyi salladı.", "Arşiv geniş bir yelpazede belge barındırıyor."]
+
+[[kural]]
+kimlik = "S005"
+ad = "Kritik veya önemli rol"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\b(?:kritik|önemli|kilit)\s+(?:bir\s+)?rol\s+(?:oyna|oynuyor|üstlen){EK}\b']
+en_az = 2
+haric_turler = ["akademik", "anlati"]
+haric = ['\b(?:film|dizi|oyun)(?:de|da|unda|ünde)\b']
+aciklama = "Rol kalıbı yinelendiğinde etkiyi açıklamak yerine ona önem atfediyor."
+oneri = "Neyin hangi sonucu nasıl etkilediğini metindeki bilgilerle belirt."
+kaynak = "turkce-humanizer SKILL.md:209–211 (bushrabeg, MIT)"
+yakalamali = ["Yedekleme kritik bir rol oynuyor. İzleme de önemli bir rol oynamaktadır.", "Altyapı kilit rol üstleniyor. Yeni araçlar kritik rol oynayacaktır."]
+yakalamamali = ["Oyunda önemli bir rol oynadı. Dizide de kritik bir rol üstlendi.", "Ortak çalışma kararda önemli bir rol oynadı."]
+
+[[kural]]
+kimlik = "S006"
+ad = "Dönüm noktası"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bdönüm\s+noktası{EK}\b']
+en_az = 2
+haric_turler = ["haber", "anlati"]
+aciklama = "Birden fazla dönüm noktası ilan etmek sıradan değişiklikleri büyütebiliyor."
+oneri = "Olayın hangi değişikliği başlattığını yaz ve dönüm noktası sözünü belirleyici olay için sakla."
+kaynak = "insanca references/kaliplar/icerik.md:7 (Tahir Yıldız, MIT)"
+yakalamali = ["Yeni ekran bir dönüm noktasıdır. Simge değişikliği de bir dönüm noktası oldu.", "İlk gün dönüm noktasıydı. Yönetim ikinci günü de dönüm noktası olarak sundu."]
+yakalamamali = ["O karar hayatımda bir dönüm noktasıydı.", "Tam dönüm noktasında yolun yerini işaretledik."]
+
+[[kural]]
+kimlik = "S007"
+ad = "Kilometre taşı"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bkilometre\s+taş(?:ı|ları)(?:n(?:ı|a|ın|da|dan)|yla|(?:ydı|ymış|ysa|dır){EK})?\b']
+en_az = 2
+haric = ['\b(?:yol|otoyol|karayol)(?:da|unda|un\s+kenarında|un\s+üzerinde)\b', '\bkilometre\s+taşı{EK}\s+(?:dik|sök|devril|boya){EK}\b']
+aciklama = "Kilometre taşı benzetmesi her aşamaya uygulandığında aşamalar arasındaki farkı örtüyor."
+oneri = "Benzetme yerine hangi aşamanın tamamlandığını veya hangi hedefe ulaşıldığını yaz."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:23 (Yüce Zerey, MIT)"
+yakalamali = ["Yeni sayfa bir kilometre taşı. Bülten de önemli bir kilometre taşıdır.", "İlk sürümü kilometre taşı sayıyoruz. İkinci kilometre taşına bugün ulaştık.", "Rapor kilometre taşlarını sıralıyor. Toplantıda yeni kilometre taşları belirlendi."]
+yakalamamali = ["Yolun kenarında ilk kilometre taşı vardı. İkinci kilometre taşı devrilmişti.", "İlk teslimatı kilometre taşı saydık.", "Kamyon yükü yüz kilometre taşıdı. Traktör de on kilometre taşıdı."]
+
+[[kural]]
+kimlik = "S008"
+ad = "Çığır açma"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bçığır\s+aç{EK}\b']
+en_az = 2
+aciklama = "Çığır açma iddiasının yinelenmesi yeniliğin boyutunu abartabiliyor."
+oneri = "Kaynakta varsa hangi yeniliğin ilk kez yapıldığını söyle."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:23 (Yüce Zerey, MIT)"
+yakalamali = ["Çığır açan bir tasarım geliştirdik. Yeni paket de çığır açacak.", "Ürün çığır açtı. Şimdi çığır açıcı bir düzenleme daha geliyor."]
+yakalamamali = ["Bu buluş göz cerrahisinde çığır açtı.", "Kızağın geçmesi için karı temizleyip çığırı açtık."]
+
+[[kural]]
+kimlik = "S009"
+ad = "Kusursuz bir şekilde"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\b(?:kusursuz|pürüzsüz)\s+bir\s+şekilde\s+(?:entegre\s+ol|çalış|işl(?:e|iyor)|bağlan|uyum\s+sağl(?:a|ıyor))(?!(?:y?[ae])?m(?:[ae](?!kt[ae])|[ıiuü])){EK}\b(?!\s+(?:değil|yok){EK}\b)']
+haric_turler = ["anlati"]
+aciklama = "Teknik işleyişe mutlak kusursuzluk yükleyen zarf tanıtım iddiasını büyütüyor."
+oneri = "Varsa hangi koşullarda sorunsuz çalıştığını metindeki bilgilerle belirt."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:24 (Yüce Zerey, MIT)"
+yakalamali = ["Eklenti sisteme kusursuz bir şekilde entegre olur.", "Uygulama pürüzsüz bir şekilde çalışmaktadır."]
+yakalamamali = ["Aynı ağda sorunsuz çalıştı.", "Usta sıvayı pürüzsüz bir şekilde sürdü.", "Makine kusursuz bir şekilde çalışmıyor.", "Cihaz kusursuz bir şekilde işlemeyecek.", "Eklenti kusursuz bir şekilde entegre olacak değil."]
+
+[[kural]]
+kimlik = "S010"
+ad = "Potansiyeli ortaya çıkarma"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\bpotansiyel(?:ini|imizi|inizi|lerini)\s+ortaya\s+çıkar{EK}\b']
+aciklama = "Potansiyeli ortaya çıkarma kalıbı gerçekleşecek değişikliği açıklamıyor."
+oneri = "Bu işin kime ne yapma olanağı verdiğini metindeki bilgiyle söyle."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:22 (Yüce Zerey, MIT)"
+yakalamali = ["Program ekibinizin potansiyelini ortaya çıkarır.", "Bu eğitim potansiyelinizi ortaya çıkarmak için tasarlandı."]
+yakalamamali = ["Pil için gerilim potansiyelini hesapladık.", "Numunede ölçülmemiş başka bir etkiyi ortaya çıkardık."]
+
+[[kural]]
+kimlik = "S011"
+ad = "Bütüncül yaklaşım"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:bütüncül|holistik)\s+(?:bir\s+)?yaklaşım{EK}\b']
+en_az = 2
+haric_turler = ["akademik"]
+aciklama = "Bütüncül yaklaşım sözü yinelendiğinde planın hangi parçaları birleştirdiği anlaşılmıyor."
+oneri = "Planın birlikte ele aldığı işleri kaynaktaki adlarıyla yaz."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:38 (Yüce Zerey, MIT)"
+yakalamali = ["Bütüncül bir yaklaşım benimsiyoruz. Her ekip bütüncül yaklaşımla ilerliyor.", "Holistik yaklaşımı öneriyoruz. Kılavuzda da bütüncül yaklaşım öne çıkıyor."]
+yakalamamali = ["Bütüncül yaklaşım sağlıkta farklı bir bakım modeli önerir.", "Makale iki yaklaşımın farklarını gösteriyor."]
+
+[[kural]]
+kimlik = "S012"
+ad = "Hızla değişen dünya"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\bgünümüzün\s+hızla\s+(?:değişen|gelişen)\s+(?:dijital\s+)?dünyasında\b', '\bdijitalleşen\s+çağımızda\b']
+aciklama = "Çağın hızına yapılan genel gönderme konunun kendi zaman bağlamını vermiyor."
+oneri = "İfadeyi çıkar ve konuya gir veya metinde belirtilen değişimin adını ver."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:19 (Yüce Zerey, MIT)"
+yakalamali = ["Günümüzün hızla değişen dünyasında bu beceri şart.", "Dijitalleşen çağımızda müşteriyi anlamak gerekir."]
+yakalamamali = ["Günümüzün değişen ikliminde sulama takvimi öne çekiliyor.", "Teknoloji hızla değişiyor ve yeni sayaçlar daha az enerji tüketiyor."]
+
+[[kural]]
+kimlik = "S013"
+ad = "Oyun değiştirici"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "orta"
+agirlik = 2
+desen = ['\boyun\s+değiştirici{EK}\b', '\boyunun\s+kurallarını\s+yeniden\s+yaz{EK}\b']
+haric_turler = ["anlati"]
+haric = ['\b(?:hakem|federasyon|oyun\s+kuralları\s+kitapçığı|masa\s+oyunu){EK}\b']
+aciklama = "Oyun benzetmesi değişen işleyişi açıklamadan büyük değişim ilan ediyor."
+oneri = "Hangi işin nasıl değiştiğini kaynaktaki bilgiyle yaz."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:54 (Yüce Zerey, MIT)"
+yakalamali = ["Yeni plan oyun değiştirici olacak.", "Bu hizmet oyunun kurallarını yeniden yazıyor."]
+yakalamamali = ["Federasyon oyunun kurallarını yeniden yazdı.", "Çocuklar oyunu yarıda bırakıp top oynamaya geçti."]
+
+[[kural]]
+kimlik = "S014"
+ad = "Devrim niteliği"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bdevrim\s+niteliğinde{EK}\b']
+en_az = 2
+haric_turler = ["haber", "akademik"]
+aciklama = "Devrim benzetmesinin tekrarı değişikliklerin gerçek boyutunu ayırt etmeyi zorlaştırıyor."
+oneri = "Önceki işleyişle somut farkı metindeki bilgilere dayanarak belirt."
+kaynak = "insanca references/kaliplar/icerik.md:7 (Tahir Yıldız, MIT)"
+yakalamali = ["Devrim niteliğinde bir sürüm çıkardık. Yeni ekran da devrim niteliğinde.", "Devrim niteliğindeki tasarım hazır. Ardından devrim niteliğinde bir paket gelecek."]
+yakalamamali = ["Bu yasa devrim niteliğinde bir değişiklikti.", "Devrim tarihi üzerine iki kitap yayımlandı."]
+
+[[kural]]
+kimlik = "S015"
+ad = "Önem bildiren kalıplar"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bönem\s+arz\s+e[td]{EK}\b', '\b(?:büyük|hayati)\s+(?:bir\s+)?önem\s+taşı{EK}\b', '\b(?:kritik|hayati)\s+(?:bir\s+)?öneme\s+sahip{EK}\b']
+en_az = 2
+haric_turler = ["akademik", "hukuk"]
+aciklama = "Ağır önem kalıplarının tekrarı konunun gerekçesini geri plana itiyor."
+oneri = "Neyin hangi sonuç için önemli olduğunu somut biçimde belirt."
+kaynak = "insanca references/kaliplar/icerik.md:7–9 (Tahir Yıldız, MIT)"
+yakalamali = ["Bakım büyük önem taşır. Kayıt da önem arz etmektedir.", "Bu görev kritik öneme sahiptir. Takip hayati bir önem taşıyor."]
+yakalamamali = ["Deprem sonrası suya erişim hayati önem taşıyor.", "Yönetim konuya önem veriyor."]
+
+[[kural]]
+kimlik = "S016"
+ad = "Unutulmaz deneyim"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bunutulmaz\s+(?:bir\s+)?deneyim\s+(?:sun|yaşat)(?!(?:[ae])?m(?:[ae](?!kt[ae])|[ıiuü])){EK}\b(?!\s+(?:değil|yok){EK}\b)']
+haric_turler = ["anlati", "sosyal"]
+aciklama = "Unutulmaz deneyim vaadi hizmetin içeriği hakkında bilgi vermiyor."
+oneri = "Ziyaretçinin ne yapabileceğini veya ne göreceğini kaynaktan aktar."
+kaynak = "insanca references/kaliplar/icerik.md:20–25 (Tahir Yıldız, MIT)"
+yakalamali = ["Tur unutulmaz bir deneyim sunuyor.", "Festival unutulmaz bir deneyim yaşatacak."]
+yakalamamali = ["O gezi benim için unutulmaz bir deneyimdi.", "Tur cam atölyesinde iki saat geçirmenizi sağlıyor.", "Festival unutulmaz bir deneyim sunmadı.", "Tur unutulmaz bir deneyim yaşatmayabilir.", "Festival unutulmaz bir deneyim yok diye iptal edilmedi."]
+
+[[kural]]
+kimlik = "S017"
+ad = "Kalbinde yer alan"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:şehrin|kentin|semtin|bölgenin|merkezin|\w+\x27n?[ıiuü]n)\s+kalbinde\s+yer\s+al{EK}\b']
+en_az = 2
+haric_turler = ["anlati"]
+aciklama = "Yer tarifinde kalp benzetmesinin tekrarı konumu bulanık bırakabiliyor."
+oneri = "Kaynaktaki semti, mahalleyi veya yakın konumu açıkça yaz."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:26 (Yüce Zerey, MIT)"
+yakalamali = ["Ankara’nın kalbinde yer alan müze açıldı. Şehrin kalbinde yer alan otel büyüdü.", "Bölgenin kalbinde yer alan merkez taşındı. Semtin kalbinde yer alacak pazar planlandı."]
+yakalamamali = ["Şehrin kalbinde yer alan çarşıya uğradık.", "Doktor hastanın kalbinde bir sorun gördü."]
+
+[[kural]]
+kimlik = "S018"
+ad = "Bir üst seviyeye taşıma"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:verimliliğ(?:i|inizi|imizi)|performans(?:ı|ınızı|ımızı)|deneyim(?:i|inizi|imizi)|marka(?:nızı|mızı))\s+bir\s+üst\s+seviyeye\s+taşı{EK}\b']
+aciklama = "Seviye benzetmesi neyin nasıl iyileşeceğini belirsiz bırakıyor."
+oneri = "Süreyi, kapasiteyi veya metinde adı geçen iyileşmeyi doğrudan belirt."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:49 (Yüce Zerey, MIT)"
+yakalamali = ["Verimliliğinizi bir üst seviyeye taşıyın.", "Paket performansı bir üst seviyeye taşıyacak."]
+yakalamamali = ["Kutuyu bir üst seviyeye taşıdık.", "Takım performansı ölçüyor ve sonuçları yayımlıyor."]
+
+[[kural]]
+kimlik = "S019"
+ad = "Değer katma ve fark yaratma"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bdeğer\s+kat(?:(?:ar|acak|ıyor|tı|tığ|mış|sa|abil|alım|sın|ıp|ınca|arak|an|ma(?:k|ya|yı|dan|dı|mış|z|yacak|lı)|mıyor){EK}|ın(?:ız)?)\b', '\bfark\s+yarat{EK}\b']
+en_az = 2
+aciklama = "Genel yarar kalıplarının tekrarı hangi farkın yaratıldığını açıklamıyor."
+oneri = "Değişen sonucu veya yararı gören kişiyi metindeki bilgilerle belirt."
+kaynak = "insanca references/kaliplar/dil.md:8–12 (Tahir Yıldız, MIT)"
+yakalamali = ["Bu özellik müşteriye değer katıyor. Yeni ekran da fark yaratıyor.", "Çözüm sektöre değer katacak. Ekip bunu değer katmak için hazırladı."]
+yakalamamali = ["Canlı yayın sırasında altyazı fark yaratır.", "Hesaba bir değer daha katınca toplam değişti.", "Değer kategorisi değişti. Yeni değer kategorileri eklendi."]
+
+[[kural]]
+kimlik = "S020"
+ad = "Gözler önüne serme"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bgözler\s+önüne\s+ser{EK}\b']
+en_az = 2
+aciklama = "Gözler önüne serme kalıbının tekrarı yorumlara aynı vurguyu ekliyor."
+oneri = "Bulguyu doğrudan ver veya gerekiyorsa yalın bir gösterme fiili kullan."
+kaynak = "turkish-anti-ai-skill references/ai-turkcesi-sozlugu.md:37 (Yüce Zerey, MIT)"
+yakalamali = ["Rapor farkı gözler önüne seriyor. Tablo da sorunu gözler önüne sermektedir.", "Sayılar açığı gözler önüne serdi. Denetim bir başka hatayı gözler önüne serdi."]
+yakalamamali = ["Belgesel yıkımı gözler önüne seriyor.", "Halıyı misafirlerin önüne serdi."]
+
+[[kural]]
+kimlik = "S021"
+ad = "Toplantı ve test gerçekleştirme"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:toplantı(?:yı|ları?)?|(?:test|analiz)(?:i|leri?)?)\s+gerçekleştir{EK}\b']
+en_az = 2
+aciklama = "Yerleşik bir fiille anlatılabilen işler gerçekleştirmek fiiliyle tekrar tekrar uzatılıyor."
+oneri = "Toplantı yaptı, test etti veya analiz etti gibi işe uygun eylemi kullan."
+kaynak = "turkish-anti-ai-skill references/sentaks-ve-morfoloji.md:183–189 (Yüce Zerey, MIT)"
+yakalamali = ["Ekip toplantı gerçekleştirdi. Ardından test gerçekleştirdi.", "Bu hafta testler gerçekleştirildi. Gerekirse ek analiz gerçekleştiririz."]
+yakalamamali = ["Kurum yıllardır kurduğu hayali gerçekleştirdi.", "Ekip toplantı gerçekleştirdi ve sonuçları yazdı."]
+
+[[kural]]
+kimlik = "S022"
+ad = "Artış ve iyileşme sağlama"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:(?:hız|verimlilik|performans)\s+artışı|iyileşme)\s+(?:sağla(?!n)|sağlıyor){EK}\b']
+en_az = 2
+aciklama = "Değişim bildiren adlar sağlamak fiiliyle birleşince doğrudan söylenebilecek eylem uzuyor."
+oneri = "Eyleyeni ve değişen şeyi yazıp hızlandırdı veya iyileştirdi gibi uygun bir fiil kullan."
+kaynak = "turkish-anti-ai-skill references/sentaks-ve-morfoloji.md:190 (Yüce Zerey, MIT)"
+yakalamali = ["Yeni yöntem hız artışı sağladı. Önbellek de iyileşme sağladı.", "Sistem performans artışı sağlar. Düzenleme ise verimlilik artışı sağlayacak."]
+yakalamamali = ["Bahçe yazın gölge sağlıyor.", "Tedaviden sonra belirgin bir iyileşme sağlandı."]
+
+[[kural]]
+kimlik = "S023"
+ad = "Katkıda bulunma"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\bkatkıda\s+bulun{EK}\b', '\bkatkı\s+(?:sağla(?!n)|sağlıyor){EK}\b']
+en_az = 2
+haric_turler = ["akademik"]
+aciklama = "Katkı bildiren yerleşik kalıplar sık yinelendiğinde yapılan iş belirsizleşiyor."
+oneri = "Kimin neyi desteklediğini ya da hangi işi yaptığını kaynaktaki ayrıntıyla belirt."
+kaynak = "turkish-anti-ai-skill references/sentaks-ve-morfoloji.md:191 (Yüce Zerey, MIT)"
+yakalamali = ["Proje büyümeye katkıda bulunuyor. Araç da gelişime katkı sağlıyor.", "Bu program verime katkı sağlayacak. Eğitim de sürece katkıda bulunacaktır."]
+yakalamamali = ["Kooperatif okulun yapımına katkıda bulundu.", "Ayşe derneğe makbuz karşılığı bağış yaptı."]
+
+[[kural]]
+kimlik = "S024"
+ad = "Açıklamada ve bilgilendirmede bulunma"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:açıklamada|bilgilendirmede|duyuruda)\s+bulun{EK}\b']
+en_az = 2
+haric_turler = ["haber", "hukuk"]
+aciklama = "Duyurma ve açıklama eylemleri bulunmak fiiliyle tekrar tekrar dolaylı kuruluyor."
+oneri = "Kimin neyi açıkladığını, bildirdiğini veya duyurduğunu doğrudan yaz."
+kaynak = "insanca references/kaliplar/yapi.md:73–78 (Tahir Yıldız, MIT)"
+yakalamali = ["Ekip bir açıklamada bulundu. Kurum da bilgilendirmede bulundu.", "Yönetim duyuruda bulunacak. Sözcü de açıklamada bulunmaktadır."]
+yakalamamali = ["Sözcü dün açıklamada bulundu.", "O bilgi kitapçığın ikinci bölümünde bulunur."]
+
+[[kural]]
+kimlik = "S025"
+ad = "İmkân ve olanak sunma"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:imkan|olanak)\s+(?:sun(?!ul)|tanı(?!n)|sağla(?!n)|sağlıyor){EK}\b']
+en_az = 2
+haric_turler = ["hukuk"]
+aciklama = "Olanak veren kalıpların tekrarı basit bir yapabilme bilgisini dolaylı anlatıyor."
+oneri = "Eylemi kimin yapabileceğini belirtip mümkünse fiili yeterlik ekiyle kur."
+kaynak = "insanca scripts/olcum.py:83–86 (Tahir Yıldız, MIT)"
+yakalamali = ["Uygulama çizim yapmaya olanak tanıyor. Araç paylaşmaya da imkân sunar.", "Sistem filtrelemeye olanak sağlar. Yeni ekran sıralamaya imkân tanıyacak."]
+yakalamamali = ["Fon arşivde araştırma yapmaya olanak tanıyor.", "Size yazma imkânı veriliyor."]
+
+[[kural]]
+kimlik = "S026"
+ad = "Mecazi ev sahipliği"
+grup = "sozcuk"
+sinif = "yz"
+duzey = "zayif"
+agirlik = 1
+desen = ['\b(?:yapıya|yapılara|canlıya|canlılara|türlere|türe|esere|eserlere)\s+ev\s+sahipliği\s+yap{EK}\b']
+en_az = 2
+haric_turler = ["anlati"]
+aciklama = "Mecazi ev sahipliğinin yinelenmesi bir yerde ne bulunduğunu dolaylı anlatıyor."
+oneri = "Yapıların veya türlerin nerede bulunduğunu açıkça söyle."
+kaynak = "turkish-anti-ai-skill references/sentaks-ve-morfoloji.md:193 (Yüce Zerey, MIT)"
+yakalamali = ["Bölge birçok tarihî yapıya ev sahipliği yapıyor. Müze özgün eserlere ev sahipliği yapmaktadır.", "Sulak alan onlarca türe ev sahipliği yapar. Kıyı da çeşitli canlılara ev sahipliği yapıyor."]
+yakalamamali = ["Belediye turnuvaya ev sahipliği yaptı.", "Bu bahçe birkaç türe ev sahipliği yapıyor."]
