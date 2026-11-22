@@ -1,4 +1,4 @@
-"""Komut satırı: python3 -m terzi denetle|duzelt|anlam|istem|havuz|kart|kurallar (ayrıntı: python3 -m terzi -h)."""
+"""Komut satırı: python3 -m terzi denetle|duzelt|yazim|anlam|istem|havuz|kart|kurallar (ayrıntı: python3 -m terzi -h)."""
 import argparse
 import json
 import sys
@@ -37,6 +37,9 @@ def main(argv=None):
     dz.add_argument("--tur", required=True, choices=sorted(TURLER))
     dz.add_argument("--anlam", default=akis.ANLAM_VARSAYILAN, choices=akis.ANLAM_KIPLERI)
     dz.add_argument("--json", action="store_true")
+    yz = alt.add_parser("yazim", help="yazmadan önce oku: türün insan yazısı örnekleri ve uydurma yasağı")
+    yz.add_argument("--tur", required=True, choices=sorted(TURLER))
+    yz.add_argument("--konu", default="", help="görevin kısa özeti; örnek seçimi buna bağlıdır")
     h = alt.add_parser("havuz", help="Vikipedi arşivlerini indir ve gündelik örnek havuzlarını kur")
     h.add_argument("--kok", type=Path, metavar="DIR", help="ham arşivlerin ve havuzların kayıt klasörü")
     an = alt.add_parser("anlam", help="kaynak ile düzeltilmiş metni anlam kilidiyle karşılaştır")
@@ -54,6 +57,21 @@ def main(argv=None):
     if a.komut == "anlam":
         from .anlam import main as anlam_main
         return anlam_main([a.kaynak, a.sonuc] + (["--json"] if a.json else []))
+    if a.komut == "yazim":
+        from .yazim import yazim_istemi
+        try:
+            metin = yazim_istemi(a.tur, a.konu)
+        except (OSError, ValueError, akis.AkisHatasi) as e:  # ValueError: bozuk UTF-8 ya da JSON
+            print(f"terzi: {e}", file=sys.stderr)
+            return 1
+        kok = akis.gundelik_havuz()
+        if metin:
+            print(metin)
+        elif a.tur in akis.GUNDELIK and (kok is None or not (kok / f"{a.tur}.jsonl").is_file()):
+            print(f"terzi: {a.tur} örnekleri yok; `python3 -m terzi havuz` komutunu çalıştırın.", file=sys.stderr)
+        else:
+            print(f"terzi: {a.tur} türünde insan örneği yok; metni örneksiz yaz.", file=sys.stderr)
+        return 0
     if a.komut == "kart":
         from .duzeltici import kart
         print(kart())
@@ -77,7 +95,7 @@ def main(argv=None):
         metin = _oku(a.metin)
         if a.v11:
             _havuz_uyar(a.tur)
-            sys.stdout.write(akis.ilk_istem(metin, a.tur, akis.ornekler(metin, a.tur)))
+            sys.stdout.write(akis.ilk_istem(metin, a.tur, akis.duzeltme_ornekleri(metin, a.tur)))
         else:
             print(istem(metin, a.tur, denetle(metin, a.tur)))
         return 0
@@ -85,11 +103,12 @@ def main(argv=None):
         _havuz_uyar(a.tur)
         try:
             yazar, sonnet = model.claude(model.OPUS), model.claude(model.SONNET)
-            sonuc = akis.duzelt(_oku(a.metin), a.tur, yazar, sonnet, sonnet, anlam=a.anlam)
+            sonuc = akis.duzelt(_oku(a.metin), a.tur, yazar, sonnet, sonnet, anlam=a.anlam, **akis.URUN_AKISI)
         except (OSError, TimeoutExpired, akis.AkisHatasi, model.ModelHatasi) as e:
             print(f"terzi: {e}", file=sys.stderr)
             return 1
-        print(json.dumps(asdict(sonuc), ensure_ascii=False, indent=1) if a.json else sonuc.metin)
+        kayit = dict(asdict(sonuc), modeller=dict(yazar=model.OPUS, okur=model.SONNET, denetci=model.SONNET), effort=model.EFOR)
+        print(json.dumps(kayit, ensure_ascii=False, indent=1) if a.json else sonuc.metin)
         return 0
     if a.komut == "kurallar":
         ks = kurallar()

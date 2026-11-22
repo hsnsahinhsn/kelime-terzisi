@@ -4,23 +4,37 @@ Kelime Terzisi, yapay zekâ ajanlarının yazdığı Türkçedeki yapay kalıpla
 
 Araç iki işi yapar:
 
-- Ajan Türkçe yazarken bir yazım kartı ve bir kanca onu bu kalıplardan uzak tutar.
+- Ajan Türkçe bir metin yazmadan önce türün insan yazısı örneklerini ve bir uydurma yasağını görür. Bir kanca yazılan metni denetler.
 - Yazılmış bir metni denetler ve anlamını koruyarak yeniden yazar.
 
 ## Neler var
 
 1. Denetçi: 98 kural, 13 tür. Bulgular üç sınıftadır: yapay zekâ izi, yazım (TDK) ve üslup.
-2. Düzeltici: insan yazısı örneklerle ilk yazım, bilgi denetimi, bir okurun yapay bulduğu yerlerin yeniden yazımı, sonra anlam onarımı. Claude Sonnet ve Opus kullanır.
+2. Düzeltici: insan yazısı örneklerle ve anlamı kilitli ilk yazım, bilgi denetimi, bir okurun yapay bulduğu yerlerin yeniden yazımı, anlam onarımı, ikinci bir okur turu, en sonda üç turluk anlam döngüsü. Döngüde Opus anlam değişikliklerini arar ve yalnız ağır olanları en küçük değişiklikle onarır. Claude Sonnet ve Opus kullanır.
 3. Anlam kilidi: düzeltilmiş metinde değişen sayıyı, adı, olumsuzluğu, yönü, alıntıyı ve ihtiyat sözünü bulur.
-4. Claude Code için beceri (`skills/kelime-terzisi/`), yazım kartı (`terzi/kart.md`) ve yazım kancası (`hooks/`).
+4. Yazım istemi (`python3 -m terzi yazim`): türün en çok altı insan örneği ve bir uydurma yasağı. Claude Code becerisi (`skills/kelime-terzisi/`) ve `AGENTS.md` ajana bunu yazmadan önce çalıştırmasını söyler.
+5. Yazım kancası (`hooks/`): ajanın yazdığı Türkçe dosyayı denetler.
 
 ## Ölçüm
 
-Düzeltici, geliştirmede hiç görülmemiş 75 görevde sınandı. Görevleri üç yapay zekâ modeli yazdı; düzeltmeleri iki kör yapay zekâ hakemi puanladı.
+Doğallık puanı, kör hakemin metni insan yazısı sayma olasılığıdır (0-100).
 
-- Doğallıkta yalın istemi ("yapay zekâ izlerini gider") ortalama 5,6 puan (yüzde 26) geçti. 12 türün hepsinde öndeydi.
-- Üçüncü kör hakem, çiftlerin 75'te 69'unda Kelime Terzisi'nin düzeltmesini seçti.
-- Sonradan eklenen anlam adımları, ağır anlam değişikliği olan görevleri yaklaşık 29'dan 16'ya indirdi. Bunun bedeli doğallıkta yaklaşık 1,3 puandır.
+Düzeltici (sürüm 1.3), geliştirmede hiç görülmemiş 75 görevde sınandı. Taslaklar üç yapay zekâ modeliyle yazıldı (Claude Opus, Claude Sonnet ve GPT, her biri 25 taslak). Düzeltmeler kör bir GPT hakemiyle puanlandı. Anlam, iki ayrı kör GPT denetimiyle kaynak taslağa karşı denetlendi.
+
+- Doğallıkta yalın istem ("yapay zekâ izlerini gider") ortalama 8,0 puan (yüzde 28) geçildi. %95 aralık 4,8 ile 11,4 puandır. Düzeltici 75 görevin 50'sinde daha yüksek, 12'sinde daha düşük puan aldı.
+- Yalnız Claude'un yazdığı 50 taslakta kazanç 4,5 puandır (yüzde 16). GPT taslaklarında kazanç 14,9 puandır; hakem de GPT olduğu için bu sayı ayrı verilir.
+- İki kör denetimin toplamında ağır anlam hatası düzelticide 11, yalın istemde 39 bulundu.
+- Sınavdan önce iki ölçüt konmuştu: en az yüzde 30 doğallık ve yalından fazla olmayan ağır anlam hatası. Anlam ölçütü tuttu, doğallık ölçütü 0,5 puanla tutmadı.
+- Düzeltici metin başına ortalama 5 dakika çalıştı (Claude, xhigh eforla).
+
+Yazım istemi 50 taslakta, aynı görevin yalın istemle yazılmış taslağıyla karşılaştırıldı. İki kör yapay zekâ hakemi puanladı.
+
+- Doğallık ortalama 5,5 puan arttı. 37 taslak iyileşti, 8 taslak kötüleşti.
+- Kör bilgi denetiminde ağır hata sayısı artmadı (yalın istemde 7, yazım isteminde 6).
+- Kural olmadan verilen örnekler bilgi uydurmayı artırdı (ağır hata 12). Kural bu yüzden istemin parçasıdır.
+- Ölçümde haber ve akademik türlerinde altı örnek vardı. Bu depodaki serbest lisanslı örnekler bu iki türde daha azdır (haber 3, akademik 2).
+- Rapor ve kurumsal türlerinin örnekleri (Wikimedia Türkiye topluluğunun duyuruları ve toplantı notları, CC BY-SA) yalnız `yazim` komutunda kullanılır. Ölçümde (48 taslak) yazarken doğallığı değiştirmediler ama hafif bilgi hatasını 8'den 2'ye indirdiler; düzelticinin ilk yazımında doğallığı biraz düşürdüler (-1,2, anlamlı değil), bu yüzden düzeltici bu iki türde örneksiz yazar.
+- İlk yazımda anlam kilidi: kör denetimde anlam kayması bulguları 53'ten 26'ya indi, doğallık düşmedi (45 taslak).
 
 ## Kurulum
 
@@ -37,6 +51,7 @@ Claude Code eklentisi olarak denemek için deponun üst klasöründe `claude --p
 ## Kullanım
 
 ```sh
+python3 -m terzi yazim --tur TUR --konu "görevin kısa özeti"
 python3 -m terzi denetle METIN.md --tur TUR
 python3 -m terzi duzelt METIN.md --tur TUR > DUZELTILMIS.md
 python3 -m terzi anlam METIN.md DUZELTILMIS.md
@@ -46,7 +61,7 @@ Türler: genel, ajan, rapor, blog, kurumsal, teknik, haber, ansiklopedik, akadem
 
 ## Gündelik örnekleri indir
 
-Düzeltici e-posta, ajan yanıtı, sosyal medya ve blog türlerinde insan yazısı örneklere bakar. Bu örnekler gerçek kişilerin Vikipedi tartışma mesajlarıdır, bu yüzden depoda yoktur. Örneksiz çalışınca bu türlerde ilk yazım iki hakem ortalamasında 2,3 puan düşük çıktı.
+Düzeltici ve `yazim` komutu e-posta, ajan yanıtı, sosyal medya ve blog türlerinde insan yazısı örneklere bakar. Bu örnekler gerçek kişilerin Vikipedi tartışma mesajlarıdır, bu yüzden depoda yoktur. Örneksiz çalışınca bu türlerde düzelticinin ilk yazımı iki hakem ortalamasında 2,3 puan düşük çıktı.
 
 `python3 -m terzi havuz` komutu bu örnekleri Türkçe Vikipedi'nin tartışma arşivlerinden (2005-2021) çıkarır. Bir kez çalıştırmak yeter, yaklaşık 2 dakika sürer. Sayfalar 19.11.2026 tarihli sürümlerine sabitlenir.
 

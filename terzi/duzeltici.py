@@ -78,7 +78,16 @@ BICIM_NOTU = {
 }
 
 
-def kisa_istem(metin, tur, rapor, taban=85, bicim=False, ornekler=(), bulgu=True):
+# İlk yazımda anlam kilidi (v1.3, 20.11.2026): kilitli v1.1 sınavından sonra kalan ağır anlam kaymalarının bir kısmı
+# ilk yazımda doğuyordu (koşulsuz istek koşula bağlanıyor, kapsam sözü düşüyor, küçük ayrıntı ekleniyor). Yazarken
+# korumada aynı türden bir kural ağır hatayı 12'den 6'ya indirdi.
+ILK_KILIT = ("Bilgiyi kapsamıyla koru: kim, neyi, ne zaman ve hangi koşulda yapacak, aynen kalsın. Koşulsuz bir isteği "
+             "koşula bağlama; \"tamamı, yalnız, başlıca, en az\" gibi kapsam sözlerini atma; metinde olmayan bir ayrıntı "
+             "(tarih, süre, sayı, ad, yer, iletişim yolu, sıra, gerekçe, biçim) ekleme. Metin insan yazısı gibi görünsün "
+             "diye somut ayrıntı uydurma.")
+
+
+def kisa_istem(metin, tur, rapor, taban=85, bicim=False, ornekler=(), bulgu=True, kilit=False):
     ilk = (f"Aşağıdaki metni bir yapay zekâ yazdı. Tür: {tur}.\n"
            "Metindeki yapay zekâ izlerini gider, metni doğal bir Türkçeyle düzelt. Bilgileri, sayıları, adları ve "
            "anlamı koru; yeni bilgi ekleme.")
@@ -95,6 +104,8 @@ def kisa_istem(metin, tur, rapor, taban=85, bicim=False, ornekler=(), bulgu=True
         parca.append("Bu türde insanların yazdığı kısa örnekler. Konularını ve sözlerini alma; yalnız cümle "
                      "kuruluşunu, ritmi ve kelime seçimini örnek al. Örneklerdeki yazım hatalarını alma; "
                      "metne yazım hatası ya da argo ekleme:\n" + ornek)
+    if kilit:
+        parca.append(ILK_KILIT)
     parca.append("Kullanıcıya soru soramazsın; gereken kararları kendin ver.\n"
                  "Yanıt olarak yalnız düzeltilmiş metnin tamamını ver; önüne ya da sonuna açıklama ekleme.\n\nMetin:\n"
                  + metin.strip())
@@ -111,11 +122,13 @@ def bulgu_listesi(rapor, en_cok=12):
     return "\n".join(satir)
 
 
-def istem(metin, tur, rapor, ornekler=(), uzunluk=(95, 105), kip="v10", taban=85, bulgu=True):
+def istem(metin, tur, rapor, ornekler=(), uzunluk=(95, 105), kip="v10", taban=85, bulgu=True, kilit=False):
     """kip "v10": v1.0 sınav sürümü (kısa istem yalnız KISA_TURLER'de). kip "kisa": her türde kısa istem,
     biçim notu ve isteğe bağlı uzunluk tabanı (v1.1 geliştirmesi)."""
     if kip == "kisa":
-        return kisa_istem(metin, tur, rapor, taban=taban, bicim=True, ornekler=ornekler, bulgu=bulgu)
+        return kisa_istem(metin, tur, rapor, taban=taban, bicim=True, ornekler=ornekler, bulgu=bulgu, kilit=kilit)
+    if kilit:
+        raise ValueError("kilit yalnız kisa kipte")
     if tur in KISA_TURLER and not ornekler:
         return kisa_istem(metin, tur, rapor)
     parca = [f"Aşağıdaki Türkçe metni bir yapay zekâ yazdı. Tür: {tur}. Metni, ana dili Türkçe olan iyi bir "

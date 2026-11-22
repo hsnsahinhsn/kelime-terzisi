@@ -6,15 +6,18 @@ from tempfile import TemporaryDirectory
 
 OPUS = "claude-opus-5-5"
 SONNET = "claude-sonnet-5-5"
+# Sunucunun model ve efor standardı (20.11.2026): her çağrı eforu açık yazar. --setting-sources "" ayar
+# dosyasını okutmaz; --effort verilmezse model kendi varsayılanıyla çalışır (20.11.2026 öncesi ölçümler böyleydi).
+EFOR = "xhigh"
 
 
 class ModelHatasi(RuntimeError):
     """Claude çağrısı tamamlanamadı."""
 
 
-def claude_komut(model):
+def claude_komut(model, effort=EFOR):
     return ["claude", "-p", "--output-format", "json", "--setting-sources", "", "--tools", "",
-            "--strict-mcp-config", "--no-session-persistence", "--model", model]
+            "--strict-mcp-config", "--no-session-persistence", "--effort", effort, "--model", model]
 
 
 def claude_ortam():

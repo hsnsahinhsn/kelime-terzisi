@@ -142,9 +142,122 @@ def hedef_istem(kaynak, sonuc):
         f"KAYNAK:\n{kaynak.strip()}\n\nDÜZELTİLMİŞ:\n{sonuc.strip()}\n")
 
 
+# Envanter denetimleri (21.11.2026, olcum/anlam_tara.py taraması, 36 taslağın iki kolu, doğru cevap kör GPT
+# denetiminin ağır bulguları): Claude, okura etkiyi sorunca değişikliklerin çoğunu hafif sayıyor ve sıkı ile hedefli
+# denetim tek kilit ürününün altı ağır hatasının hiçbirini bulmadı. Envanter önce kaynağın bilgi birimlerini sayar,
+# sonra her birinin karşılığını alıntılatır: Opus ile 16/17 yakaladı. tur_istem aynı envantere tür yazdırır;
+# onarıma yalnız bilgi türleri gider (duygu, nezaket, vurgu, süs sözleri gitmez).
+ENVANTER_TANIM = (
+    "Anlam değişikliği şudur: bir bilginin düşmesi ya da değişmesi (sayı, ad, tarih, yer, değişimin yönü); koşulsuz "
+    "bir istek ya da sözün koşula bağlanması ya da bir koşulun düşmesi; bir isteğin düz bir söze ya da düz bir sözün "
+    "isteğe dönmesi; bir kapsam sözünün düşmesi ya da değişmesi (\"tamamı\", \"yalnız\", \"başlıca\", \"en az\", "
+    "\"yaklaşık\"); bir ihtiyat sözünün düşmesi ya da eklenmesi (\"olabilir\", \"yaklaşık\"); bir savın ya da sonucun "
+    "başka bir savla değişmesi; kaynakta olmayan yeni ve somut bir ayrıntı (tarih, iletişim yolu, sıra, gerekçe, "
+    "biçim, yer, kişi, olay). Aynı şeyi başka sözcüklerle söylemek değişiklik değildir.\n"
+    "Her değişikliği ağır ya da hafif diye işaretle: okurun yapacağı ya da inanacağı şeyi değiştiriyorsa ağır "
+    "(\"agir\": true), değiştirmiyorsa hafif (\"agir\": false).\n")
+# Uçtan uca koşu (21.11.2026, terzi-v13-o2t): Sonnet taslaklarının sonundaki yazar notunu ("Yalnızca verdiğiniz
+# bilgileri kullandım", kelime sayısı) envanter eksik saydı, onarım notu metne geri ekledi; hakem bu üç metne 1-4 verdi.
+YAZAR_NOTU = (
+    "Kaynağın başında ya da sonunda metnin kendisi olmayan, yazarın metni isteyene yazdığı bir not olabilir (örnek: "
+    "kelime sayısı, hangi bilgilerin kullanıldığı, \"isterseniz kısaltırım\" gibi bir öneri). Bu notu envantere alma; "
+    "düzeltmede düşmesi fark değildir.\n")
+
+
+def envanter_istem(kaynak, sonuc):
+    """Önce kaynağın bilgi envanteri, sonra madde madde eşleme: model iki metni gözden geçirip "aynı" demesin."""
+    return (
+        "Aşağıda bir KAYNAK metin ve onun DÜZELTİLMİŞ hâli var. Düzeltme kaynağın her bilgisini, isteğini ve "
+        "koşulunu korumalıydı; yalnız üslup değişebilirdi. Üç adımda çalış ve her adımı yanıtta yaz.\n"
+        "1. Envanter: kaynaktaki her bilgi birimini ayrı bir madde olarak yaz: her istek, talimat, söz ve kural (kim, "
+        "neyi, ne zaman, hangi koşulda yapacak); her koşul ve istisna; her kapsam ve nicelik sözü; her sayı, tarih, ad "
+        "ve yer; her sav ve sonuç.\n"
+        "2. Eşleme: her madde için düzeltilmiş metindeki karşılığını aynen alıntıla ve durumunu yaz: \"ayni\", "
+        "\"farkli\" ya da \"yok\".\n"
+        "3. Ekleme: düzeltilmiş metni cümle cümle oku; kaynakta karşılığı olmayan somut bir ayrıntı, istek ya da "
+        "koşul varsa yaz.\n" + YAZAR_NOTU + ENVANTER_TANIM +
+        "Yanıt olarak yalnız şu biçimde JSON ver, başka bir şey yazma:\n"
+        '{"envanter": [{"kaynakta": "...", "duzeltmede": "...", "durum": "ayni", "agir": false, "aciklama": ""}], '
+        '"eklenen": [{"duzeltmede": "...", "agir": true, "aciklama": "..."}]}\n'
+        "\"ayni\" maddelerde \"agir\" false ve açıklama boş olsun.\n\n"
+        f"KAYNAK:\n{kaynak.strip()}\n\nDÜZELTİLMİŞ:\n{sonuc.strip()}\n")
+
+
+BILGI_TURLERI = ("istek", "kosul", "kapsam", "bilgi", "sav", "ayrinti")
+SUS_TURLERI = ("duygu", "nezaket", "vurgu", "sus")
+
+
+def tur_istem(kaynak, sonuc):
+    """Envanter, ama her farka tür yazılır; ağırlık türden gelir (Claude, okura etkiyi sorunca değişikliklerin çoğunu
+    hafif sayıyordu). Onarıma yalnız bilgi türleri gider; duygu, nezaket, vurgu ve süs sözlerinin düşmesi gitmez."""
+    return (
+        "Aşağıda bir KAYNAK metin ve onun DÜZELTİLMİŞ hâli var. Düzeltme kaynağın her bilgisini, isteğini ve "
+        "koşulunu korumalıydı; yalnız üslup değişebilirdi. Üç adımda çalış ve her adımı yanıtta yaz.\n"
+        "1. Envanter: kaynaktaki her bilgi birimini ayrı bir madde olarak yaz: her istek, talimat, söz ve kural (kim, "
+        "neyi, ne zaman, hangi koşulda yapacak); her koşul ve istisna; her kapsam ve nicelik sözü; her sayı, tarih, ad "
+        "ve yer; her sav, neden ve sonuç.\n"
+        "2. Eşleme: her madde için düzeltilmiş metindeki karşılığını aynen alıntıla ve durumunu yaz: \"ayni\", "
+        "\"farkli\" ya da \"yok\".\n"
+        "3. Ekleme: düzeltilmiş metni cümle cümle oku; kaynakta karşılığı olmayan somut bir ayrıntı, istek, koşul ya "
+        "da sav varsa yaz.\n"
+        "Her \"farkli\", \"yok\" ve ekleme için türünü yaz:\n"
+        "- istek: bir istek, talimat, söz, kural ya da zorunluluk değişti, düştü, eklendi; bir istek düz söze ya da "
+        "düz söz isteğe döndü; zorunluluk olanağa döndü ya da tersi.\n"
+        "- kosul: bir koşul, süre, istisna ya da olumsuzluk eklendi, düştü ya da değişti.\n"
+        "- kapsam: \"tamamı, yalnız, başlıca, en az, yaklaşık, bazı, her\" gibi bir kapsam ya da nicelik sözü "
+        "değişti ya da düştü; sayılmamış bir çokluk sayıya döndü.\n"
+        "- bilgi: bir sayı, tarih, saat, ad, yer, kurum ya da değişimin yönü değişti ya da düştü.\n"
+        "- sav: bir sav, neden, sonuç ya da ihtiyat sözü (\"olabilir\", \"görünüyor\") değişti, düştü ya da eklendi.\n"
+        "- ayrinti: kaynakta olmayan somut bir ayrıntı eklendi (tarih, iletişim yolu, sıra, gerekçe, biçim, yer, kişi, "
+        "olay).\n"
+        "- duygu, nezaket, vurgu, sus: bir duygu sözü, nezaket ya da teşekkür sözü, vurgu sözü (\"küçük\", "
+        "\"özellikle\") ya da bilgi taşımayan bir süs cümlesi düştü, eklendi ya da değişti.\n"
+        "Aynı şeyi başka sözcüklerle söylemek fark değildir.\n" + YAZAR_NOTU +
+        "Yanıt olarak yalnız şu biçimde JSON ver, başka bir şey yazma:\n"
+        '{"envanter": [{"kaynakta": "...", "duzeltmede": "...", "durum": "ayni", "tur": "", "aciklama": ""}], '
+        '"eklenen": [{"duzeltmede": "...", "tur": "ayrinti", "aciklama": "..."}]}\n'
+        "\"ayni\" maddelerde tür ve açıklama boş olsun.\n\n"
+        f"KAYNAK:\n{kaynak.strip()}\n\nDÜZELTİLMİŞ:\n{sonuc.strip()}\n")
+
+
+def envanter_coz(yanit, yalniz_bilgi=False):
+    """Envanter yanıtından Rapor: "yok" eksik, "farkli" değişen, ekleme eklenen olur; "ayni" atılır.
+    yalniz_bilgi: tür yazılmış ögelerden duygu, nezaket, vurgu ve süs türleri atılır (bilinmeyen tür kalır)."""
+    m = re.search(r"\{.*\}", yanit or "", re.S)
+    if not m:
+        return Rapor(hata="JSON yok")
+    try:
+        d = json.loads(m.group(0))
+    except ValueError as e:
+        return Rapor(hata=f"JSON bozuk: {e}")
+    if not isinstance(d, dict) or not isinstance(d.get("envanter"), list):
+        return Rapor(hata="envanter listesi yok")
+    if not isinstance(d.get("eklenen"), list):
+        return Rapor(hata="eklenen listesi yok")
+    if any(not isinstance(oge, dict) or not isinstance(oge.get("kaynakta"), str)
+           or not isinstance(oge.get("durum"), str) or oge["durum"].lower() not in ("ayni", "farkli", "yok")
+           for oge in d["envanter"]):
+        return Rapor(hata="geçersiz envanter ögesi")
+    if any(not isinstance(oge, dict) or not isinstance(oge.get("duzeltmede"), str) for oge in d["eklenen"]):
+        return Rapor(hata="geçersiz eklenen ögesi")
+    r = Rapor()
+    for kaynak_liste, oge in [("envanter", x) for x in d["envanter"]] + [("eklenen", x) for x in d["eklenen"]]:
+        if yalniz_bilgi and str(oge.get("tur", "")).lower() in SUS_TURLERI:
+            continue
+        durum = str(oge.get("durum", "")).lower()
+        if kaynak_liste == "eklenen":
+            r.eklenen.append(dict(duzeltmede=oge.get("duzeltmede", ""), aciklama=oge.get("aciklama", "")))
+        elif durum == "yok":
+            r.eksik.append(dict(kaynakta=oge.get("kaynakta", ""), aciklama=oge.get("aciklama", "")))
+        elif durum != "ayni":
+            r.degisen.append(dict(kaynakta=oge.get("kaynakta", ""), duzeltmede=oge.get("duzeltmede", ""),
+                                  aciklama=oge.get("aciklama", "")))
+    return r
+
+
 def coz(yanit, tam=False):
     """Model yanıtından Rapor; JSON bulunamazsa hata alanı dolar ve sorun yok sayılmaz.
-    tam: üç listenin üçü de yanıtta olmalı ({} ya da başka bir nesne temiz sayılmaz; onarım turu için)."""
+    tam: üç listenin üçü de yanıtta olmalı ({} ya da başka bir nesne temiz sayılmaz)."""
     m = re.search(r"\{.*\}", yanit or "", re.S)
     if not m:
         return Rapor(hata="JSON yok")
@@ -168,9 +281,13 @@ def coz(yanit, tam=False):
     return r
 
 
-ISTEMLER = {False: istem, True: siki_istem, "siki": siki_istem, "olgu": olgu_istem, "hedef": hedef_istem}
+ISTEMLER = {False: istem, True: siki_istem, "siki": siki_istem, "olgu": olgu_istem, "hedef": hedef_istem,
+            "envanter": envanter_istem, "tur": tur_istem}
 
 
 def denetle(kaynak, sonuc, model, siki=False):
-    """model: istem alır, metin döner. siki: anlam onarım turunun istemi (True ya da "siki", "olgu")."""
-    return coz(model(ISTEMLER[siki](kaynak, sonuc)), tam=bool(siki))
+    """model: istem alır, metin döner. siki: anlam onarım turunun istemi (True ya da "siki", "olgu", "hedef",
+    "envanter", "tur")."""
+    if siki in ("envanter", "tur"):
+        return envanter_coz(model(ISTEMLER[siki](kaynak, sonuc)), yalniz_bilgi=siki == "tur")
+    return coz(model(ISTEMLER[siki](kaynak, sonuc)), tam=True)

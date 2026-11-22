@@ -1,0 +1,159 @@
+{
+ "aciklama": "Kör GPT anlam denetimlerinin geliştirme taslaklarında bulduğu gerçek yerler (düzeltmedeki söz, kaynaktaki söz); olcum/anlam_ornek_kur.py ile seçildi.",
+ "dosya_sayisi": 52,
+ "dosyalar": [
+  "20261120_1520_korbilgi3_1.md",
+  "20261120_1954_korbilgi4_1.md",
+  "20261120_1958_korbilgi5_1.md",
+  "20261120_2125_korbilgi6_1.md",
+  "20261120_2354_kor-bilgi7_1.md",
+  "20261120_2359_kor-bilgi8_1.md",
+  "20261121_1023_kor-bilgi9_1.md",
+  "20261121_1029_kor-bilgi10_1.md",
+  "20261121_1044_kor-bilgi11_1.md",
+  "20261121_1135_kor-bilgi12_1.md",
+  "20261121_1222_kor-bilgi15_1.md",
+  "20261121_1234_kor-bilgi13_1.md",
+  "20261121_1245_kor-bilgi14_1.md",
+  "20261121_1255_kor-bilgi16_1.md",
+  "20261121_1308_kor-bilgi17_1.md",
+  "20261121_1333_kor-bilgi19_1.md",
+  "20261121_1529_kor-bilgi18_1.md",
+  "20261121_1543_kor-bilgi21_1.md",
+  "20261121_1657_kor-bilgi22_1.md",
+  "20261121_1710_kor-bilgi23_1.md",
+  "20261121_2258_kor-bilgi24_1.md",
+  "20261121_2304_kor-bilgi25_1.md",
+  "20261121_2342_kor-bilgi26_1.md",
+  "20261121_2352_kor-bilgi27_1.md",
+  "20261122_0105_kor-bilgi28_1.md",
+  "20261122_0111_kor-bilgi29_1.md",
+  "20261122_0210_kor-bilgi30_1.md",
+  "20261122_0216_kor-bilgi31_1.md",
+  "20261122_0223_kor-bilgi32_1.md",
+  "20261122_0821_kor-bilgi36_1.md",
+  "20261122_0836_kor-bilgi33_1.md",
+  "20261122_0841_kor-bilgi37_1.md",
+  "20261122_0846_kor-bilgi34_1.md",
+  "20261122_0851_kor-bilgi38_1.md",
+  "20261122_0855_kor-bilgi35_1.md",
+  "20261122_0940_kor-bilgi39_1.md",
+  "20261122_0945_kor-bilgi40_1.md",
+  "20261122_0951_kor-bilgi41_1.md",
+  "20261122_1149_kor-bilgi42_1.md",
+  "20261122_1157_kor-bilgi43_1.md",
+  "20261122_1203_kor-bilgi44_1.md",
+  "20261122_1234_kor-bilgi45_1.md",
+  "20261122_1239_kor-bilgi46_1.md",
+  "20261122_1245_kor-bilgi47_1.md",
+  "20261122_1316_kor-bilgi48_1.md",
+  "20261122_1326_kor-bilgi51_1.md",
+  "20261122_1332_kor-bilgi49_1.md",
+  "20261122_1337_kor-bilgi52_1.md",
+  "20261122_1343_kor-bilgi50_1.md",
+  "20261122_1349_kor-bilgi53_1.md",
+  "20261122_0156_gdenet-o2-g2_1.md",
+  "20261122_0203_gdenet-o2-g3_1.md"
+ ],
+ "zaman": "2026-11-22T14:24:27Z",
+ "major": [
+  [
+   "Yapamıyorsa tek bir test sayfasıyla halledebilirsiniz",
+   "Tek bir test sayfasıyla bunu çözebilirsiniz"
+  ],
+  [
+   "gerçek doğa olaylarında arıyor",
+   "gerçek doğa olaylarında yatıyor"
+  ],
+  [
+   "Yeni örnek teslim edilirse",
+   "bildirimin gönderilmesini izleyen 3 iş günü içinde sağlam örneği elden verirse"
+  ],
+  [
+   "Değişecekse en kısa sürede haber verirseniz",
+   "konuyla ilgili dönüşünüzü beklerim"
+  ],
+  [
+   "ekolojik krizi teknik ya da yönetimsel bir sorun olarak görmek yetmez",
+   "doğanın metalaştırılmasının Aydınlanma'nın diyalektiğinin çağdaş zirvesi olduğunu savunarak"
+  ],
+  [
+   "süt numunelerinin toplama deposuna kaç dakikada vardığı izlendi",
+   "sabah alınan süt numunelerinin toplama deposuna varış sürelerini kapsadı"
+  ],
+  [
+   "bir dönüş yaparsanız",
+   "bu e-postaya yanıt"
+  ],
+  [
+   "1.3. madde uyarınca yapacağı yazılı seçim bildirimiyle",
+   "Sipariş Sahibi seçimini yazılı olarak bildirdiğinde"
+  ],
+  [
+   "yetkili görevli yazılı uygunluk kaydı düzenlemedikçe yeniden kullanılamaz",
+   "Yetkili görevli, tartının yeniden kullanıma uygun olduğunu bakım sonrasında yazılı olarak kayda geçirir."
+  ],
+  [
+   "parça başı çalışmak",
+   "eve parça işi"
+  ],
+  [
+   "Yeğenim Umay'ın sarı altıgen uçurtmasının",
+   "yeğenim Umay’ın yaptığı sarı altıgen uçurtmanın"
+  ],
+  [
+   "dolaylı yoldan insanlardan da söz eden kitap",
+   "Karınca toplumunu insan toplumuna ayna tutan bir çerçevede anlatan kitap"
+  ],
+  [
+   "Bakan Elvan'ın açıklamasıyla kur gerilerken",
+   "Bu açıklama sonrası Dolar/TL kuru 8'in alta indi."
+  ],
+  [
+   "askerî müdahaleyi destekleyenlerin bundan ne tür reformlar beklediği",
+   "askerî müdahaleye verilen desteğin hangi reform beklentilerine dayandığını"
+  ],
+  [
+   "sazının başından kalkıp",
+   "Sazdan piyanoya, yol kenarından kapalı bir odaya gelmişti"
+  ],
+  [
+   "her birinin uzunluğunu ayrı ayrı bize yazın",
+   "her duvarın uzunluğunu ayrı ayrı bizimle paylaşın"
+  ]
+ ],
+ "minor": [
+  [
+   "Birçok gazetede",
+   "çeşitli gazetelerde"
+  ],
+  [
+   "İngiliz gazetelerindeki yorum yazılarında",
+   "İngiliz gazetelerindeki değerlendirmelerde"
+  ],
+  [
+   "başlıca kaynaklarından biri",
+   "önemli etkenlerden biri"
+  ],
+  [
+   "ayraç unuttuğunuzu",
+   "arasında bıraktığınızı"
+  ],
+  [
+   "itirazlar yükseldi",
+   "tartışmalara yol açmıştır"
+  ],
+  [
+   "Sokak gösterileri yayıldıkça",
+   "sokak gösterileri ... zemin hazırlamıştır."
+  ],
+  [
+   "boyun eğdi",
+   "bildirmemeye razı oldu"
+  ],
+  [
+   "en geç 1971 baskısında yapılmış",
+   "en geç 1971 baskısında yapıldığı söylenebilir"
+  ]
+ ]
+}

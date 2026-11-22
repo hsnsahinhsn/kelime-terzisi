@@ -1,6 +1,11 @@
 # Türkçe yazım (Kelime Terzisi)
 
-Bu depoda ya da bu araçla Türkçe metin yazarken `terzi/kart.md` kartını uygula.
+Bu depoda ya da bu araçla Türkçe bir metin yazmadan önce türün insan örneklerini al ve çıktıdaki kurala uy:
+
+```sh
+python3 -m terzi yazim --tur TUR --konu "görevin kısa özeti"
+```
+
 Türkçe bir metni bitirince denetle ve yalnız bulunan yerleri düzelt:
 
 ```sh

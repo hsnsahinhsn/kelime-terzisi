@@ -1,3 +1,4 @@
+import json
 import unittest
 
 from terzi import bilgi, duzeltici
@@ -26,10 +27,57 @@ class CozTest(unittest.TestCase):
         self.assertEqual(bilgi.coz("bilmiyorum").hata, "JSON yok")
         self.assertTrue(bilgi.coz("{eksik: ]}").hata.startswith("JSON bozuk"))
 
+    def test_yalin_denetim_uc_listeyi_de_ister(self):
+        for yanit in ('{}', '{"eksik": [], "degisen": []}', '{"eksik": [], "degisen": [], "eklenen": null}'):
+            with self.subTest(yanit=yanit):
+                self.assertTrue(bilgi.denetle("Kaynak.", "Düzeltme.", lambda ist: yanit).hata)
+        yanit = '{"eksik": [], "degisen": [], "eklenen": []}'
+        self.assertEqual(bilgi.denetle("Kaynak.", "Düzeltme.", lambda ist: yanit), bilgi.Rapor())
+        self.assertEqual(bilgi.coz("{}"), bilgi.Rapor())
+
     def test_istem_iki_metni_tasir(self):
         ist = bilgi.istem("Kaynak metin.", "Düzeltilmiş metin.")
         self.assertIn("KAYNAK:\nKaynak metin.", ist)
         self.assertTrue(ist.rstrip().endswith("Düzeltilmiş metin."))
+
+    def test_envanter_istemleri_yazar_notunu_disarida_tutar(self):
+        # Yazarın isteyene notu envantere girerse onarım notu metne geri ekliyordu (terzi-v13-o2t, 21.11.2026).
+        for istem in (bilgi.envanter_istem, bilgi.tur_istem):
+            self.assertIn(bilgi.YAZAR_NOTU, istem("Kaynak.", "Düzeltme."))
+
+
+class EnvanterCozTest(unittest.TestCase):
+    def test_gecerli_durumlar_ve_ekleme(self):
+        yanit = json.dumps(dict(envanter=[dict(kaynakta="a", durum="AYNI"),
+                                         dict(kaynakta="b", duzeltmede="c", durum="FarkLI"),
+                                         dict(kaynakta="d", durum="YoK")], eklenen=[dict(duzeltmede="e")]))
+        r = bilgi.envanter_coz(yanit)
+        self.assertEqual(r.hata, "")
+        self.assertEqual(r.eksik, [dict(kaynakta="d", aciklama="")])
+        self.assertEqual(r.degisen, [dict(kaynakta="b", duzeltmede="c", aciklama="")])
+        self.assertEqual(r.eklenen, [dict(duzeltmede="e", aciklama="")])
+        self.assertEqual(bilgi.envanter_coz('{"envanter": [], "eklenen": []}'), bilgi.Rapor())
+
+    def test_listeler_zorunlu(self):
+        for yanit in (dict(eklenen=[]), dict(envanter=None, eklenen=[]), dict(envanter=[]),
+                      dict(envanter=[], eklenen={}), dict(envanter=[], eklenen=None)):
+            with self.subTest(yanit=yanit):
+                self.assertTrue(bilgi.envanter_coz(json.dumps(yanit)).hata)
+
+    def test_envanter_ogeleri_dogrulanir(self):
+        for oge in ("metin", dict(durum="ayni"), dict(kaynakta=3, durum="ayni"), dict(kaynakta="a"),
+                    dict(kaynakta="a", durum=None), dict(kaynakta="a", durum="bilinmiyor", tur="nezaket")):
+            with self.subTest(oge=oge):
+                yanit = json.dumps(dict(envanter=[dict(kaynakta="b", durum="yok"), oge], eklenen=[]))
+                r = bilgi.envanter_coz(yanit, yalniz_bilgi=True)
+                self.assertTrue(r.hata)
+                self.assertFalse(r.sorun)
+
+    def test_eklenen_ogeler_dogrulanir(self):
+        for oge in ("metin", dict(tur="sus"), dict(duzeltmede=3)):
+            with self.subTest(oge=oge):
+                yanit = json.dumps(dict(envanter=[], eklenen=[oge]))
+                self.assertTrue(bilgi.envanter_coz(yanit, yalniz_bilgi=True).hata)
 
 
 class DonguTest(unittest.TestCase):

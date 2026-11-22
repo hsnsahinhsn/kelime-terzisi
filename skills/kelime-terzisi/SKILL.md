@@ -1,23 +1,27 @@
 ---
 name: kelime-terzisi
-description: Türkçe metin yazarken ya da yazılmış bir Türkçe metni düzeltirken kullan. Yapay zekâ izlerini (tekdüze -mektedir sonları, şişirme sözler, çeviri kalıpları, şablon kapanış, uzun tire) denetçiyle bulur ve anlamı koruyarak düzeltir.
+description: Türkçe metin yazmadan önce ya da yazılmış bir Türkçe metni düzeltirken kullan. Yazmadan önce türün insan yazısı örneklerini ve uydurma yasağını verir. Yazılmış metindeki yapay zekâ izlerini (tekdüze -mektedir sonları, şişirme sözler, çeviri kalıpları, şablon kapanış, uzun tire) denetçiyle bulur ve anlamı koruyarak düzeltir.
 ---
 
 # Kelime Terzisi
 
-Türkçe bir metin yazacaksan aşağıdaki kartı uygula. Bitmiş bir metni düzelteceksen "Düzeltme akışı" bölümünü izle.
+Türkçe bir metin yazacaksan önce "Yazmadan önce" bölümünü izle. Bitmiş bir metni düzelteceksen "Düzeltme akışı" bölümünü izle.
 
-Türkçe yazarken (Kelime Terzisi kartı)
-1. Cümle sonlarını çeşitlendir. Art arda -mektedir, -dır, -mıştır dizme. Türün doğal zamanını kullan: haberde -dı, anlatıda -dı ya da -mış, konuşur gibi yazarken -iyor.
-2. Cümle uzunluğunu değiştir. Uzun bir cümleden sonra kısa bir cümle gelebilir. Her paragrafı aynı kalıpla kurma.
-3. Cümleleri "Ayrıca", "Bunun yanı sıra", "Öte yandan", "Sonuç olarak" ile açmayı alışkanlık yapma.
-4. Şişirme sözleri at: önemli bir rol oynamak, kritik, kapsamlı, dönüm noktası, yadsınamaz, âdeta, geniş bir yelpaze, belirgin biçimde. Değer yargısı yerine bilgiyi ver.
-5. Çeviri kalıplarından kaçın: "-e sahip olmak", gereksiz "tarafından", "bir ... olarak", "bu da ... anlamına gelir", "X değil, Y".
-6. Kapanışta özet, ders ya da iyimser genelleme ekleme. Son cümle de bilgi taşısın.
-7. Uzun tire (—) kullanma; ara sözü virgülle ya da ayrı cümleyle ver. Kalın yazıyı ve emojiyi süs için kullanma.
-8. Üçlü listeyi alışkanlık yapma; öğe sayısı malzemeye uysun.
-9. Somut ol. Bilmediğin ayrıntıyı uydurma; elindeki bilgiyle yetin.
-10. TDK yazımına uy: her şey, bir şey, birçok, ya da; ondalıkta virgül (3,5); "hâlâ" ile "hala" farklıdır.
+## Yazmadan önce
+
+Metnin türünü seç ve şu komutu çalıştır. `--konu` için görevi tek cümleyle özetle.
+
+```sh
+bash <beceri klasörü>/terzi.sh yazim --tur TUR --konu "görevin kısa özeti"
+```
+
+Komut bu türde insanların yazdığı en çok altı kısa örnek ve bir kural verir. Örneklerden cümle kuruluşunu, ritmi ve kelime seçimini al; konularını ve sözlerini alma. Kurala uy: görevde olmayan tarih, son gün, süre, sayı, ad, koşul, onay, söz ya da kural ekleme.
+
+Ölçümde bu adım 50 taslakta doğallığı ortalama 5,5 puan artırdı ve bilgi hatasını artırmadı. Kuralsız örneklerle yazan ajanlar ise bilgi uydurdu. Bu yüzden kuralı atlama.
+
+E-posta, ajan, sosyal ve blog örnekleri bir kez indirilir (aşağıda `havuz`). Komut "insan örneği yok" derse (genel tür) metni örneksiz yaz.
+
+Metni bitirince denetle ve yalnız bulunan yerleri düzelt.
 
 ## Denetçi
 
