@@ -109,6 +109,9 @@ def main(argv=None):
             return 1
         kayit = dict(asdict(sonuc), modeller=dict(yazar=model.OPUS, okur=model.SONNET, denetci=model.SONNET), effort=model.EFOR)
         print(json.dumps(kayit, ensure_ascii=False, indent=1) if a.json else sonuc.metin)
+        if sonuc.yazar_notu and not a.json:
+            print("terzi: taslağın sonundaki yazar notu metinden ayrıldı, düzeltilmedi:\n" + sonuc.yazar_notu,
+                  file=sys.stderr)
         return 0
     if a.komut == "kurallar":
         ks = kurallar()

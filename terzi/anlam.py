@@ -1,9 +1,10 @@
 """Türkçe metnin düzeltilmiş halinde anlam değişikliği işaretlerini bulur."""
-import argparse, json, re, unicodedata
+import argparse, json, re, sys, unicodedata
 from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
 from decimal import Decimal, localcontext
 from pathlib import Path
+from . import yazar_notu
 
 @dataclass
 class Fark:
@@ -253,7 +254,11 @@ def main(argv=None):
     p.add_argument("--json", action="store_true")
     args = p.parse_args(argv)
     with args.kaynak.open(encoding="utf-8", newline="") as k, args.sonuc.open(encoding="utf-8", newline="") as s:
-        farklar = karsilastir(k.read(), s.read())
+        # duzelt gibi: taslağın sonundaki yazar notu bilgi sayılmaz (düşmesi fark değildir).
+        (kaynak, not_), (sonuc, _) = yazar_notu.ayir(k.read()), yazar_notu.ayir(s.read())
+        farklar = karsilastir(kaynak, sonuc)
+    if not_:
+        print("terzi: kaynağın sonundaki yazar notu karşılaştırmaya alınmadı:\n" + not_, file=sys.stderr)
     if args.json:
         print(json.dumps([asdict(f) for f in farklar], ensure_ascii=False))
     else:

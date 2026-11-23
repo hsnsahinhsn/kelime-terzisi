@@ -42,6 +42,8 @@ Claude komut satırı aracı kuruluysa şu komutu çalıştır. Düzeltme birka�
 bash <beceri klasörü>/terzi.sh duzelt METIN.md --tur TUR > DUZELTILMIS.md
 ```
 
+Taslak, isteyene yazılmış bir notla bitiyorsa (kelime sayısı ya da "tarih eklemedim" gibi) komut bu notu düzeltmeden önce ayırır. Not düzeltilmiş metne girmez, değişmeden standart hataya yazılır.
+
 E-posta, ajan, sosyal ve blog türlerinde düzeltici insan örneklerine bakar. Komut "örnekleri indirin" uyarısı verirse bir kez `bash <beceri klasörü>/terzi.sh havuz` çalıştır (Vikipedi arşivlerinden, yaklaşık 2 dakika). `KT_GUNDELIK_HAVUZ` ayarlıysa o klasör kullanılır; klasör yoksa uyarı sürer.
 
 Claude aracı yoksa v1.1 düzeltme istemini al ve metnin tamamını bu istemle yeniden yaz.

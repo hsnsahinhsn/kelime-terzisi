@@ -10,7 +10,7 @@ Araç iki işi yapar:
 ## Neler var
 
 1. Denetçi: 98 kural, 13 tür. Bulgular üç sınıftadır: yapay zekâ izi, yazım (TDK) ve üslup.
-2. Düzeltici: insan yazısı örneklerle ve anlamı kilitli ilk yazım, bilgi denetimi, bir okurun yapay bulduğu yerlerin yeniden yazımı, anlam onarımı, ikinci bir okur turu, en sonda üç turluk anlam döngüsü. Döngüde Opus anlam değişikliklerini arar ve yalnız ağır olanları en küçük değişiklikle onarır. Claude Sonnet ve Opus kullanır.
+2. Düzeltici: insan yazısı örneklerle ve anlamı kilitli ilk yazım, bilgi denetimi, bir okurun yapay bulduğu yerlerin yeniden yazımı, anlam onarımı, ikinci bir okur turu, en sonda üç turluk anlam döngüsü. Döngüde Opus anlam değişikliklerini arar ve yalnız ağır olanları en küçük değişiklikle onarır. Claude Sonnet ve Opus kullanır. Taslağın sonunda isteyene yazılmış bir not varsa ("Metin yaklaşık 128 kelime", "tarih eklemedim"), not düzeltmeden önce ayrılır ve ayrıca verilir.
 3. Anlam kilidi: düzeltilmiş metinde değişen sayıyı, adı, olumsuzluğu, yönü, alıntıyı ve ihtiyat sözünü bulur.
 4. Yazım istemi (`python3 -m terzi yazim`): türün en çok altı insan örneği ve bir uydurma yasağı. Claude Code becerisi (`skills/kelime-terzisi/`) ve `AGENTS.md` ajana bunu yazmadan önce çalıştırmasını söyler.
 5. Yazım kancası (`hooks/`): ajanın yazdığı Türkçe dosyayı denetler.
@@ -26,6 +26,7 @@ Düzeltici (sürüm 1.3), geliştirmede hiç görülmemiş 75 görevde sınandı
 - İki kör denetimin toplamında ağır anlam hatası düzelticide 11, yalın istemde 39 bulundu.
 - Sınavdan önce iki ölçüt konmuştu: en az yüzde 30 doğallık ve yalından fazla olmayan ağır anlam hatası. Anlam ölçütü tuttu, doğallık ölçütü 0,5 puanla tutmadı.
 - Düzeltici metin başına ortalama 5 dakika çalıştı (Claude, xhigh eforla).
+- Sürüm 1.4'ün akışı 1.3 ile aynıdır. Tek fark, yazar notunun düzeltmeden önce ayrılmasıdır. Sınavda not iki metinde korunmuştu ve bu metinler çok düşük puan almıştı. Sınavın notlu 9 taslağında yeniden ölçüldü: notu ayrılan bir metnin puanı 5'ten 38'e çıktı. Öbür metinlerdeki farklar düzelticinin her koşuda biraz farklı yazmasından gelir.
 
 Yazım istemi 50 taslakta, aynı görevin yalın istemle yazılmış taslağıyla karşılaştırıldı. İki kör yapay zekâ hakemi puanladı.
 

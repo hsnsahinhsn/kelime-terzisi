@@ -83,6 +83,17 @@ class AkisTest(unittest.TestCase):
         self.assertNotIn("kilit", sonuc.adimlar[0])
         self.assertIs(sonuc.adimlar[2]["kilit"], False)
 
+    def test_tekrar_kurali_yalniz_istenince_ilk_yazimda(self):
+        # Tekrar denemesi (v1.4, 23.11.2026): kural yalnız ilk yazım istemine girer.
+        sonuc = self.duzelt(anlam="yok", tekrar=True)
+        self.assertIn(duzeltici.TEKRAR, self.yazar.call_args_list[0].args[0])
+        self.assertTrue(all(duzeltici.TEKRAR not in c.args[0] for c in self.yazar.call_args_list[1:]))
+        self.assertTrue(sonuc.adimlar[0]["tekrar"])
+        self.yazar.reset_mock()
+        sonuc = self.duzelt(anlam="yok")
+        self.assertTrue(all(duzeltici.TEKRAR not in c.args[0] for c in self.yazar.call_args_list))
+        self.assertNotIn("tekrar", sonuc.adimlar[0])
+
     def test_kilitli_ve_kilitsiz_okur_istemi(self):
         yapay = ["Toplantı"]
         for secenek, beklenen in ((dict(), True), (dict(kilit=False), False), (dict(kilit=False, okur_kilit=True), True)):
@@ -363,3 +374,134 @@ class BosGirdiTest(unittest.TestCase):
         with self.assertRaises(akis.AkisHatasi):
             akis.duzelt("  \n ", "haber", model, model, model)
         self.assertEqual(cagri, [])
+
+
+class YazarNotuTest(unittest.TestCase):
+    # Örnekler sınav taslaklarından (inceleme 23.11.2026, docs/v1.4-claude-taslak.md).
+    GOVDE = "Yürüyüşten döndüm.\n\nTaşı masaya koydum."
+
+    def test_ayiraclı_notlar_ayrilir(self):
+        for not_ in ("Metin konu satırıyla birlikte yaklaşık 128 kelime. Taşın rengini ve diğer ayrıntıları "
+                     "yürüyüşüne göre değiştirebilirsin.",
+                     "*(Başlık hariç yaklaşık 255 kelime.)*",
+                     "Metin başlıklar dahil 187 kelimedir ve yalnız verdiğiniz bilgilere dayanır.",
+                     "*Not: Bugün 22 Kasım 2026. Metne yıl eklemedim. Yayımlamadan önce tarihleri kontrol edin.*",
+                     "Not: Conta değişiminin saati verilmediği için çizelgede böyle yazdım."):
+            with self.subTest(not_=not_):
+                self.assertEqual(akis.yazar_notu_ayir(f"{self.GOVDE}\n\n---\n\n{not_}\n"), (self.GOVDE, not_))
+
+    def test_ayiracsiz_not_paragrafi_siki_kuralla_ayrilir(self):
+        not_ = "*Not: Doğrulayamadığım bilgileri uydurmamak için köşeli parantezle boş bıraktım.*"
+        self.assertEqual(akis.yazar_notu_ayir(f"{self.GOVDE}\n\n{not_}"), (self.GOVDE, not_))
+
+    def test_icerik_notlari_kalir(self):
+        for metin in (f"{self.GOVDE}\n\nNot: Nisan öncesinde gelen istekler bu raporun kapsamı dışındadır.",
+                      f"{self.GOVDE}\n\n**Not:** Dosyaları yeniden dışa aktarmanız gerekir.",
+                      f"{self.GOVDE}\n\nNot: Faturayı da ekledim.",
+                      f"{self.GOVDE}\n\nNot: İsterseniz toplantıyı salıya alabiliriz.",
+                      f"{self.GOVDE}\n\nNot: Başvurular 500 kelimeyi geçmemelidir.",
+                      f"{self.GOVDE}\n\nNot: Köşeli parantez içindeki parametreler isteğe bağlıdır.",
+                      f"{self.GOVDE}\n\nNot: İsterseniz formu değiştirebilirsiniz.",
+                      f"{self.GOVDE}\n\n---\n\nNot: Faturayı da ekledim.",
+                      f"{self.GOVDE}\n\n---\n\nYayımlamadan önce kurul onayı alınır.",
+                      f"{self.GOVDE}\n\nSonuç\n---\nMetin yaklaşık 100 kelime ama bu bölüm içerik.",
+                      f"{self.GOVDE}\n\n---\n\nMetin yaklaşık 128 kelime.\n\nAyrıca kargo salı günü çıkacak.",
+                      "\n\nNot: Doğrulayamadığım bilgileri uydurmadım.",
+                      f"{self.GOVDE}\n\n---\n\nAyşe Yılmaz\nSatın Alma",
+                      f"---\n\nMetin yaklaşık 128 kelime.",
+                      "Tek paragraf, yaklaşık 128 kelime yazdım.",
+                      # ikinci Codex incelemesi (23.11.2026): koşul sayım değildir, nottaki yeni sayı ve tarih kalır
+                      f"{self.GOVDE}\n\nNot: Başvuru metni en az 500 kelime olmalıdır.",
+                      f"{self.GOVDE}\n\nNot: Metin en fazla 300 kelime olmalı.",
+                      f"{self.GOVDE}\n\nNot: Metin yaklaşık 170 kelime. Ürün 5 Aralık'ta kargoya verilecek.",
+                      f"{self.GOVDE}\n\n---\n\nMetin yaklaşık 170 kelime. Toplantı salı günü yapılacak.",
+                      # üçüncü Codex incelemesi: nottaki her cümle yazarın yorumu olmalı; "cuma" "cumartesi" değildir
+                      f"{self.GOVDE}\n\nNot: Metin yaklaşık 170 kelime. Kargo ücretsizdir.",
+                      f"{self.GOVDE}\n\nNot: Metin yaklaşık 170 kelime. Bugün 5 paket gönderilecek.",
+                      f"Ödeme cumartesi günü yapılır.\n\nNot: Metin yaklaşık 170 kelime. Ödeme cuma günü de yapılabilir.",
+                      f"{self.GOVDE}\n\nNot: Metin yaklaşık 170 kelime. Faturayı da ekledim.",
+                      f"{self.GOVDE}\n\nNot: Metin yaklaşık 170 kelime. Siparişi ücretsiz iade edebilirsiniz.",
+                      f"{self.GOVDE}\n\nNot: Metin yaklaşık 170 kelime. Ayrıntılı bilgi için bizi arayabilirsiniz.",
+                      # bugünün tarihi verilmeden tarih yorumu içerik sayılır
+                      f"{self.GOVDE}\n\nNot: Metin yaklaşık 170 kelime. Son başvuru tarihi geçti."):
+            with self.subTest(metin=metin):
+                self.assertEqual(akis.yazar_notu_ayir(metin), (metin, ""))
+
+    def test_satir_sonu_buyuk_harf_ve_cekimler(self):
+        self.assertEqual(akis.yazar_notu_ayir(f"{self.GOVDE}\r\n\r\n---\r\n\r\nMETİN YAKLAŞIK 128 KELİME.\r\n"),
+                         (self.GOVDE, "METİN YAKLAŞIK 128 KELİME."))
+        for not_ in ("Tarih belirtmedim, verdiğiniz bilgide yoktu.", "Daha kısa bir metin isterseniz kısaltırım.",
+                     "Metni güncel haber olarak yayımlayacaksanız rakamları teyit edin."):
+            with self.subTest(not_=not_):
+                self.assertEqual(akis.yazar_notu_ayir(f"{self.GOVDE}\n\n---\n\n{not_}")[1], not_)
+
+    def test_notun_kendi_tarihi_ve_sayilari_yeni_bilgi_degil(self):
+        govde = "Toplantı 7 Ekim'de, ikincisi 4 Ekim'de."
+        for not_ in ("*Not: Bugün 22 Kasım 2026. Metindeki 7 Ekim ve 4 Ekim tarihleri geçmiş. Metne yıl eklemedim.*",
+                     # sınav 3 S016: bugünün tarihi verilince metindeki tarihleri yorumlayan cümle de nottur
+                     "*Not: Bugün 22 Kasım 2026. Bu yılın 7 Ekim ve 4 Ekim tarihleri geçmiş durumda. Metne yıl eklemedim. "
+                     "Yayımlamadan önce tarihleri kontrol edin.*",
+                     "Metin yaklaşık 170 kelime. Verdiğin bilgilerle 190'a kadar uzatmak yeni bilgi eklemeyi gerektirirdi, "
+                     "o yüzden bıraktım. İstersen havanın nasıl olduğunu sen anlat, ben de bunu 190'a tamamlayayım."):
+            with self.subTest(not_=not_):
+                self.assertEqual(akis.yazar_notu_ayir(f"{govde}\n\n---\n\n{not_}"), (govde, not_))
+
+    def test_uzun_blok_not_sayilmaz(self):
+        uzun = "Bu bölümde verdiğiniz sayılar var. " + "Ölçüm sürdü. " * 60
+        metin = f"{self.GOVDE}\n\n---\n\n{uzun}"
+        self.assertEqual(akis.yazar_notu_ayir(metin), (metin, ""))
+
+    def test_duzelt_notu_modele_gostermez_ve_ayri_verir(self):
+        cagri = []
+        temiz = json.dumps(dict(eksik=[], degisen=[], eklenen=[]))
+        def model_(istem):
+            cagri.append(istem)
+            return okur_yaniti() if "insan_olasilik" in istem else (temiz if "KAYNAK" in istem else self.GOVDE)
+        not_ = "Metin yaklaşık 128 kelime. Yalnızca verdiğiniz bilgileri kullandım."
+        with patch.object(akis, "ornekler", return_value=[]):
+            sonuc = akis.duzelt(f"{self.GOVDE}\n\n---\n{not_}", "eposta", model_, model_, model_, anlam="yok")
+        self.assertEqual(sonuc.yazar_notu, not_)
+        self.assertEqual(sonuc.adimlar[0], dict(adim="yazar_notu", ayrildi=not_))
+        self.assertTrue(cagri)
+        self.assertFalse(any("128 kelime" in istem for istem in cagri))
+
+    def test_anlam_dongulerine_ve_yamaya_notsuz_kaynak_gider(self):
+        temiz = json.dumps(dict(eksik=[], degisen=[], eklenen=[]))
+        model_ = Mock(side_effect=lambda istem: okur_yaniti() if "insan_olasilik" in istem else
+                      (temiz if "KAYNAK" in istem or "DÜZELT" in istem.upper() else self.GOVDE))
+        not_ = "Metin yaklaşık 128 kelime."
+        with patch.object(akis, "ornekler", return_value=[]), patch.object(akis, "_denetle", wraps=akis._denetle) as den, \
+                patch.object(akis.dongu, "calistir", return_value=(self.GOVDE, [])) as dongu:
+            sonuc = akis.duzelt(f"{self.GOVDE}\n\n---\n\n{not_}", "eposta", model_, model_, model_, yama_turu=1)
+        self.assertEqual(sonuc.yazar_notu, not_)
+        self.assertTrue(den.call_args_list)
+        self.assertTrue(all(c.args[0] == self.GOVDE for c in den.call_args_list))
+        self.assertEqual(dongu.call_args.args[0], self.GOVDE)
+
+    def test_komut_json_notu_verir(self):
+        sonuc = akis.Sonuc("Düzeltilmiş.", [dict(adim="yazar_notu", ayrildi="Metin 128 kelime.")], "Metin 128 kelime.")
+        with patch.object(model, "claude"), patch.object(akis, "duzelt", return_value=sonuc), \
+                patch("sys.stdin", io.StringIO(KAYNAK)), redirect_stdout(io.StringIO()) as cikti, \
+                redirect_stderr(io.StringIO()) as hata:
+            self.assertEqual(main(["duzelt", "-", "--tur", TUR, "--json"]), 0)
+        self.assertEqual(json.loads(cikti.getvalue())["yazar_notu"], "Metin 128 kelime.")
+        self.assertEqual(hata.getvalue(), "")
+
+    def test_anlam_komutu_kaynaktaki_notu_saymaz(self):
+        with tempfile.TemporaryDirectory() as d:
+            k, s_ = Path(d, "k.md"), Path(d, "s.md")
+            k.write_text(f"{self.GOVDE}\n\n---\n\nMetin yaklaşık 128 kelime.\n", encoding="utf-8")
+            s_.write_text(self.GOVDE + "\n", encoding="utf-8")
+            with redirect_stdout(io.StringIO()) as cikti, redirect_stderr(io.StringIO()) as hata:
+                self.assertEqual(main(["anlam", str(k), str(s_)]), 0)
+        self.assertEqual(cikti.getvalue(), "")
+        self.assertIn("128 kelime", hata.getvalue())
+
+    def test_komut_notu_standart_hataya_yazar(self):
+        sonuc = akis.Sonuc("Düzeltilmiş.", [], "Metin 128 kelime.")
+        with patch.object(model, "claude"), patch.object(akis, "duzelt", return_value=sonuc), \
+                patch("sys.stdin", io.StringIO(KAYNAK)), redirect_stdout(io.StringIO()) as cikti, \
+                redirect_stderr(io.StringIO()) as hata:
+            self.assertEqual(main(["duzelt", "-", "--tur", TUR]), 0)
+        self.assertEqual(cikti.getvalue(), "Düzeltilmiş.\n")
+        self.assertIn("Metin 128 kelime.", hata.getvalue())

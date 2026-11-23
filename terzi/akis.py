@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import bilgi, denetci, dongu, duzeltici, havuz
+from . import bilgi, denetci, dongu, duzeltici, havuz, yazar_notu
 
 # Kilitli v1.1 sınavı (20.11.2026, 75 metin, aynı kör sınıflandırma): ağır değişiklikli görev yaklaşık 29 -> 16;
 # doğallık iki hakem ortalamasında yaklaşık -1,3 (yalının yine yaklaşık 4 puan önünde).
@@ -35,6 +35,11 @@ class AkisHatasi(RuntimeError):
 class Sonuc:
     metin: str
     adimlar: list[dict]
+    yazar_notu: str = ""
+
+
+# Taslağın sonundaki yazar notu düzeltmeden önce ayrılır (terzi/yazar_notu.py, inceleme 23.11.2026).
+yazar_notu_ayir = yazar_notu.ayir
 
 
 def gundelik_havuz():
@@ -88,11 +93,11 @@ def duzeltme_ornekleri(metin, tur):
     return [] if tur in YALNIZ_YAZIM else ornekler(metin, tur)
 
 
-def ilk_istem(metin, tur, orn, kilit=True):
+def ilk_istem(metin, tur, orn, kilit=True, tekrar=False):
     # Anlam kilidi (v1.3, 20.11.2026, olcum/ilkkilit_olc.sh, 45 taslak): kör Codex denetiminde anlam kayması bulguları
     # 53'ten 26'ya, ağırlar 4'ten 2'ye indi; doğallık +0,40 [-1,47, +2,24] (GPT hakemi), yani düşmedi.
     return duzeltici.istem(metin, tur, denetci.denetle(metin, tur), orn, kip="kisa", taban=None, bulgu=False,
-                           kilit=kilit)
+                           kilit=kilit, tekrar=tekrar)
 
 
 # Okura giden metin ve istem ölçümdeki olcum.hakem ve olcum.hakem_istem ile aynı kalır.
@@ -212,7 +217,8 @@ def _yaz(yazar, istem):
 
 
 def duzelt(metin, tur, yazar, okur, denetci, anlam_model=None, anlam=ANLAM_VARSAYILAN, kilit=True, okur_kilit=None,
-           okur_turu=1, okur_kaynak=False, okur_alinti=3, son_okur=0, son_okur_kaynak=False, yama_turu=0):
+           okur_turu=1, okur_kaynak=False, okur_alinti=3, son_okur=0, son_okur_kaynak=False, yama_turu=0,
+           tekrar=False):
     """İnsan örnekleriyle düzelt, okurun işaretlediği yerleri yaz ve bilgiyi denetle.
 
     kilit=False: ilk yazımdaki ve okur adımındaki anlam kilidi cümleleri yok (tanı, 21.11.2026: v1.1 yöntemi aynı
@@ -226,7 +232,8 @@ def duzelt(metin, tur, yazar, okur, denetci, anlam_model=None, anlam=ANLAM_VARSA
     hepsi 3 sınırına dayandı).
     son_okur: anlam döngülerinden sonra kaç okur turu daha çalışır (geliştirme 21.11.2026, terzi-v13i-o2: ikinci tur
     doğallığı yalından %45 üstüne çıkardı, ağır anlam hatası da arttı); son_okur_kaynak: bu turlar kaynağı görür.
-    yama_turu: en sonda Claude anlam döngüsü (dongu.calistir, Opus denetim ve en küçük yama) kaç tur çalışır."""
+    yama_turu: en sonda Claude anlam döngüsü (dongu.calistir, Opus denetim ve en küçük yama) kaç tur çalışır.
+    tekrar: ilk yazım aynı bilgiyi ikinci kez veren cümleleri tek yere indirir (duzeltici.TEKRAR, v1.4 denemesi)."""
     okur_kilit = kilit if okur_kilit is None else okur_kilit
     if okur_turu < 1:
         raise ValueError("okur_turu en az 1 olmalı")
@@ -239,9 +246,12 @@ def duzelt(metin, tur, yazar, okur, denetci, anlam_model=None, anlam=ANLAM_VARSA
         raise ValueError(f"geçersiz anlam kipi: {anlam}")
     if not metin.strip():
         raise AkisHatasi("boş metin: düzeltilecek bir şey yok")
+    metin, yazar_notu = yazar_notu_ayir(metin)
     orn = duzeltme_ornekleri(metin, tur)
-    sonuc = _yaz(yazar, ilk_istem(metin, tur, orn, kilit))
-    adimlar = [dict(adim="ilk_yazim", ornek_sayisi=len(orn), **({} if kilit else dict(kilit=False)))]
+    sonuc = _yaz(yazar, ilk_istem(metin, tur, orn, kilit, tekrar))
+    adimlar = ([dict(adim="yazar_notu", ayrildi=yazar_notu)] if yazar_notu else []) + [
+        dict(adim="ilk_yazim", ornek_sayisi=len(orn), **({} if kilit else dict(kilit=False)),
+             **(dict(tekrar=True) if tekrar else {}))]
 
     def onar(sonuc, rapor):
         return _yaz(yazar, duzeltici.bilgi_istem(metin, sonuc, rapor.satirlar(), tur))
@@ -286,4 +296,4 @@ def duzelt(metin, tur, yazar, okur, denetci, anlam_model=None, anlam=ANLAM_VARSA
     if yama_turu:
         sonuc, turlar = dongu.calistir(metin, sonuc, tur, yazar, orn, yama_turu)
         adimlar.append(dict(adim="yama_dongusu", turlar=turlar))
-    return Sonuc(sonuc, adimlar)
+    return Sonuc(sonuc, adimlar, yazar_notu)
